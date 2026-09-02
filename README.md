@@ -46,7 +46,7 @@ Sus objetivos principales son:
 | Exploración | Búsqueda por proyecto o tecnología y filtros por Web, Escritorio, Móvil, Videojuegos, Visión y Educación. |
 | Fichas técnicas | Objetivo, arquitectura, flujo, decisiones, compromisos, código con procedencia, evidencia visual y relacionados. |
 | Caso de estudio | Arquitectura y decisiones de `Luics415.github.io`, fuera del catálogo de repositorios externos. |
-| Perfil | Experiencia, especialidades y servicios de desarrollo. |
+| Perfil | Experiencia, especialidades y nueve servicios de desarrollo, gestión, calidad y documentación. |
 | Identidad visual | Paleta inspirada en Arcane, recortes de grafitis icónicos de Jinx y emblema de ancla con “L”. |
 | Metadatos | SEO básico, Open Graph, imagen social, favicon, canonical y `robots.txt`. |
 | Publicación | Flujo automático de GitHub Actions hacia GitHub Pages. |
@@ -77,7 +77,7 @@ El [catálogo completo](https://luics415.github.io/#projects) conserva además P
 
 La dirección visual combina azul profundo, cian, rosa y magenta. La firma digital **Luics415** y el ancla con la letra **L** funcionan como elementos centrales de marca.
 
-El fondo utiliza 14 sprites transparentes obtenidos de los recortes de grafitis de Jinx seleccionados para este portafolio personal. El procesamiento conserva los píxeles visibles de cada recorte y elimina únicamente fragmentos vecinos mediante máscaras alfa; no redibuja, recolorea ni sustituye los motivos. Los sprites se concentran en el perímetro, se mueven lentamente con opacidades discretas y mantienen despejado el corredor central. En móvil se muestra un subconjunto de siete piezas y `prefers-reduced-motion` desactiva el movimiento.
+El fondo utiliza 14 sprites transparentes obtenidos de los recortes de grafitis de Jinx seleccionados para este portafolio personal. El procesamiento conserva los píxeles visibles de cada recorte y elimina únicamente fragmentos vecinos mediante máscaras alfa; no redibuja, recolorea ni sustituye los motivos. Los sprites se concentran en el perímetro, tienen una presencia más visible y recorren trayectorias lentas perceptibles sin invadir el corredor central. En móvil se muestra un subconjunto de siete piezas con menor opacidad, y `prefers-reduced-motion` desactiva el movimiento.
 
 ## Arquitectura técnica
 
