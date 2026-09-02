@@ -44,7 +44,7 @@ Sus objetivos principales son:
 | Portada | Firma digital de Luics415, presentación profesional y accesos principales. |
 | Proyectos | Cinco casos destacados para reclutamiento, catálogo completo de Stars y experimentos separados. |
 | Exploración | Búsqueda por proyecto o tecnología y filtros por Web, Escritorio, Móvil, Videojuegos, Visión y Educación. |
-| Fichas técnicas | Objetivo, arquitectura, flujo, decisiones, compromisos, código conceptual, evidencia visual y relacionados. |
+| Fichas técnicas | Objetivo, arquitectura, flujo, decisiones, compromisos, código con procedencia, evidencia visual y relacionados. |
 | Caso de estudio | Arquitectura y decisiones de `Luics415.github.io`, fuera del catálogo de repositorios externos. |
 | Perfil | Experiencia, especialidades y servicios de desarrollo. |
 | Identidad visual | Paleta inspirada en Arcane, fondos animados, grafitis originales y emblema de ancla con “L”. |
@@ -67,14 +67,17 @@ El [catálogo completo](https://luics415.github.io/#projects) conserva además P
 
 - Las capturas reales se identifican como evidencia visual del proyecto.
 - Si un repositorio no publica capturas, la ficha muestra una portada editorial y lo declara explícitamente.
-- Todo código genérico se rotula como **reconstrucción conceptual** y nunca se presenta como extracto literal del repositorio.
+- Los extractos reales enlazan el archivo, las líneas y un commit inmutable del repositorio público.
+- El código de la fuente de trabajo, una reconstrucción conceptual y una base externa se distinguen con estados visuales diferentes.
+- Todo patrón genérico se rotula como **reconstrucción conceptual** y nunca se presenta como extracto literal del repositorio.
+- Cubo Rubik se documenta como integración de una base externa y conserva la atribución a *The Cube* de bsehovac.
 - Los estados distinguen código o binarios presentes en el repositorio de una GitHub Release pública.
 
 ## Diseño e identidad visual
 
 La dirección visual combina azul profundo, cian, rosa y magenta. La firma digital **Luics415** y el ancla con la letra **L** funcionan como elementos centrales de marca.
 
-El fondo utiliza grafitis separados con transparencia y animaciones ambientales lentas. Estos elementos se mantienen detrás del contenido, con opacidad limitada, para conservar contraste y legibilidad. Cuando el visitante activa `prefers-reduced-motion`, los movimientos no esenciales se reducen o deshabilitan.
+El fondo utiliza dos murales de grafiti originales con transparencia real: una composición panorámica para escritorio y otra vertical para móvil. Los motivos se concentran en el perímetro, sin cuadros negros ni fragmentos vecinos, y conservan un corredor central despejado para el contenido. Las animaciones ambientales permanecen detrás del mural y respetan `prefers-reduced-motion`.
 
 ## Arquitectura técnica
 
@@ -84,7 +87,7 @@ Luics415.github.io/
 ├── proyectos/                Quince fichas técnicas prerenderizadas
 ├── caso-de-estudio/          Caso técnico del propio portafolio
 ├── assets/                   JavaScript, CSS e imágenes con hash
-├── graffiti-v2/              Recursos decorativos optimizados
+├── graffiti-v3/              Murales WebP transparentes para escritorio y móvil
 ├── docs/screenshots/         Capturas estables para documentación
 ├── og.png                    Imagen para compartir el sitio
 ├── luics415-icon-*.png       Iconos de la marca
@@ -153,6 +156,7 @@ No deben editarse manualmente los archivos minificados salvo una emergencia docu
 - Texto alternativo en imágenes relevantes.
 - Respeto por `prefers-reduced-motion`.
 - Carga diferida de capturas fuera del primer viewport.
+- Selección responsive del mural: el navegador descarga únicamente la composición adecuada para el viewport.
 - Búsqueda tolerante a tildes, filtros accesibles y contador anunciado mediante `aria-live`.
 - Menú móvil con cierre mediante `Escape` y objetivos táctiles de al menos 44 px.
 - Bloques de código con desplazamiento interno, sin provocar desbordamiento de la página.

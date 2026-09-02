@@ -27,6 +27,8 @@ El sitio puede solicitar tipografías desde Google Fonts. Las familias tipográf
 
 Los proyectos enlazados desde el portafolio mantienen licencias independientes. Sus capturas, nombres, datos, recursos y contenidos no se relicencian automáticamente bajo la Licencia MIT de este repositorio.
 
+La ficha **Cubo Rubik** identifica su motor como una integración de la demostración pública [*The Cube* de bsehovac](https://codepen.io/bsehovac/pen/EMyWVv). Los patrones explicativos del portafolio son reconstrucciones conceptuales y no atribuyen ese motor a Luics415.
+
 ## Identidad de Luics415
 
 La firma digital, el emblema de ancla con la letra “L”, los iconos, banners, grafitis y demás recursos de identidad de Luics415 no se ofrecen bajo la Licencia MIT salvo autorización expresa y escrita.
@@ -38,4 +40,3 @@ La firma digital, el emblema de ancla con la letra “L”, los iconos, banners,
 ## Sin transferencia de derechos
 
 La inclusión de un nombre, paquete, servicio, captura o enlace tiene fines informativos y de atribución. No transfiere derechos de propiedad intelectual ni modifica la licencia original del tercero correspondiente.
-
