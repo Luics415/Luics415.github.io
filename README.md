@@ -27,7 +27,7 @@ Sitio profesional de **Luics415**, desarrollador de software enfocado en aplicac
 
 ## Objetivo
 
-El portafolio presenta proyectos reales de Luics415 mediante tarjetas resumidas y páginas individuales con contexto profesional. Busca comunicar no solo el resultado visual, sino también el objetivo, la arquitectura, las decisiones técnicas, el rol desempeñado y los aprendizajes de cada proyecto.
+El portafolio presenta los **12 repositorios externos de la lista pública de Stars de Luics415**, tres experimentos históricos y un caso de estudio del propio sitio. Cada ficha comunica no solo el resultado visual, sino también el objetivo, la arquitectura, el flujo de ejecución, las decisiones técnicas, los compromisos y la evidencia disponible.
 
 Sus objetivos principales son:
 
@@ -42,8 +42,10 @@ Sus objetivos principales son:
 | Área | Contenido |
 | --- | --- |
 | Portada | Firma digital de Luics415, presentación profesional y accesos principales. |
-| Proyectos | Tarjetas con portada, resumen, año, rol, tecnologías, repositorio y demo cuando existe. |
-| Fichas técnicas | Objetivo, arquitectura, decisiones, puntos destacados, capturas y enlaces externos. |
+| Proyectos | Cinco casos destacados para reclutamiento, catálogo completo de Stars y experimentos separados. |
+| Exploración | Búsqueda por proyecto o tecnología y filtros por Web, Escritorio, Móvil, Videojuegos, Visión y Educación. |
+| Fichas técnicas | Objetivo, arquitectura, flujo, decisiones, compromisos, código conceptual, evidencia visual y relacionados. |
+| Caso de estudio | Arquitectura y decisiones de `Luics415.github.io`, fuera del catálogo de repositorios externos. |
 | Perfil | Experiencia, especialidades y servicios de desarrollo. |
 | Identidad visual | Paleta inspirada en Arcane, fondos animados, grafitis originales y emblema de ancla con “L”. |
 | Metadatos | SEO básico, Open Graph, imagen social, favicon, canonical y `robots.txt`. |
@@ -51,26 +53,22 @@ Sus objetivos principales son:
 
 ## Proyectos destacados
 
-### Palabra y Oración
+La selección principal para conversación laboral reúne cinco proyectos:
 
-[![Palabra y Oración](docs/screenshots/palabra-y-oracion.jpg)](https://luics415.github.io/proyectos/palabra-y-oracion/)
+1. [AussieCare](https://luics415.github.io/proyectos/aussiecare/): PWA educativa, cinematográfica y offline-first.
+2. [Bio-Gesture Control Android](https://luics415.github.io/proyectos/bio-gesture-control-android/): visión por computadora, transformación de coordenadas y Accesibilidad en Android.
+3. [KASA Service Tracker](https://luics415.github.io/proyectos/kasa-service-tracker/): aplicación .NET 8 con persistencia JSON, trazabilidad y exportación XLSX.
+4. [Tlalne-Priority](https://luics415.github.io/proyectos/tlalne-priority/): C++20, cola de prioridad, índice por folio y persistencia CSV.
+5. [Dev Visualizer](https://luics415.github.io/proyectos/dev-visualizer/): atlas técnico estático con manifiesto central y escenas accesibles.
 
-Aplicación devocional con Biblia en español, 38 oraciones, Santo Rosario guiado, favoritos, progreso local y lectura mediante Web Speech API.
+El [catálogo completo](https://luics415.github.io/#projects) conserva además Palabra y Oración, GX Pets y ARMY Edition, Bio-Gesture Control Pro, Sistema de Becas y las dos ediciones de EternalMazesRPG.
 
-- [Ficha en el portafolio](https://luics415.github.io/proyectos/palabra-y-oracion/)
-- [Aplicación publicada](https://luics415.github.io/palabra-y-oracion/)
-- [Repositorio](https://github.com/Luics415/palabra-y-oracion)
+### Política de evidencia técnica
 
-### Dev Visualizer
-
-[![Dev Visualizer](docs/screenshots/dev-visualizer.webp)](https://luics415.github.io/proyectos/dev-visualizer/)
-
-Atlas educativo visual para estudiar desarrollo de software mediante rutas progresivas, escenas animadas y modelos mentales reutilizables.
-
-- [Ficha en el portafolio](https://luics415.github.io/proyectos/dev-visualizer/)
-- [Repositorio](https://github.com/Luics415/Dev-Visualizer)
-
-El sitio también documenta proyectos de videojuegos, visión por computadora, aplicaciones educativas y experimentos web. Consulta el [catálogo completo](https://luics415.github.io/#projects).
+- Las capturas reales se identifican como evidencia visual del proyecto.
+- Si un repositorio no publica capturas, la ficha muestra una portada editorial y lo declara explícitamente.
+- Todo código genérico se rotula como **reconstrucción conceptual** y nunca se presenta como extracto literal del repositorio.
+- Los estados distinguen código o binarios presentes en el repositorio de una GitHub Release pública.
 
 ## Diseño e identidad visual
 
@@ -83,7 +81,8 @@ El fondo utiliza grafitis separados con transparencia y animaciones ambientales 
 ```text
 Luics415.github.io/
 ├── index.html                 Página principal prerenderizada
-├── proyectos/                Una ruta estática por proyecto
+├── proyectos/                Quince fichas técnicas prerenderizadas
+├── caso-de-estudio/          Caso técnico del propio portafolio
 ├── assets/                   JavaScript, CSS e imágenes con hash
 ├── graffiti-v2/              Recursos decorativos optimizados
 ├── docs/screenshots/         Capturas estables para documentación
@@ -138,8 +137,8 @@ En **Settings → Pages → Build and deployment**, la fuente debe permanecer co
 Para añadir o modificar un proyecto:
 
 1. actualiza la fuente de datos del portafolio;
-2. incorpora una portada y capturas reales optimizadas;
-3. completa resumen, rol, año, tecnologías, enlaces, puntos destacados y secciones técnicas;
+2. incorpora una portada y capturas reales optimizadas o una portada editorial claramente declarada;
+3. completa resumen, rol, año, tecnologías, enlaces, puntos destacados, procedencia y secciones técnicas;
 4. valida la compilación y todas las rutas prerenderizadas;
 5. copia la nueva salida estática a este repositorio;
 6. publica y verifica que GitHub Actions termine correctamente;
@@ -154,6 +153,9 @@ No deben editarse manualmente los archivos minificados salvo una emergencia docu
 - Texto alternativo en imágenes relevantes.
 - Respeto por `prefers-reduced-motion`.
 - Carga diferida de capturas fuera del primer viewport.
+- Búsqueda tolerante a tildes, filtros accesibles y contador anunciado mediante `aria-live`.
+- Menú móvil con cierre mediante `Escape` y objetivos táctiles de al menos 44 px.
+- Bloques de código con desplazamiento interno, sin provocar desbordamiento de la página.
 - Imágenes WebP cuando resulta conveniente.
 - Prerenderizado de la portada y las páginas de proyectos.
 - Recursos versionados para una caché segura.
@@ -185,4 +187,3 @@ Consulta [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) para conocer las depen
 
 - GitHub: [github.com/Luics415](https://github.com/Luics415)
 - Portafolio: [luics415.github.io](https://luics415.github.io/)
-
