@@ -31,11 +31,13 @@ La ficha **Cubo Rubik** identifica su motor como una integración de la demostra
 
 ## Identidad de Luics415
 
-La firma digital, el emblema de ancla con la letra “L”, los iconos, banners, grafitis y demás recursos de identidad de Luics415 no se ofrecen bajo la Licencia MIT salvo autorización expresa y escrita.
+La firma digital, el emblema de ancla con la letra “L”, los iconos, banners y demás recursos propios de identidad de Luics415 no se ofrecen bajo la Licencia MIT salvo autorización expresa y escrita.
 
 ## Marcas y referencias culturales
 
 *Arcane*, *League of Legends*, Riot Games, Fortiche, Netflix y cualquier otra marca citada pertenecen a sus respectivos titulares. La inspiración cromática o ambiental del portafolio no implica afiliación, patrocinio ni respaldo.
+
+El fondo incorpora recortes de grafitis asociados visualmente a Jinx para la presentación personal del titular. Estos recursos no se relicencian bajo MIT ni se atribuyen a Luics415; el tratamiento técnico únicamente aplica máscaras alfa, composición, opacidad y movimiento.
 
 ## Sin transferencia de derechos
 

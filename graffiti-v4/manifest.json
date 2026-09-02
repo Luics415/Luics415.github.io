@@ -1,0 +1,290 @@
+[
+  {
+    "name": "shark",
+    "source": "shark.webp",
+    "output": "shark.webp",
+    "size": [
+      158,
+      118
+    ],
+    "source_crop": [
+      27,
+      19,
+      177,
+      129
+    ],
+    "operation": "alpha-mask-only"
+  },
+  {
+    "name": "jinx-script",
+    "source": "jinx-script.webp",
+    "output": "jinx-script.webp",
+    "size": [
+      118,
+      69
+    ],
+    "source_crop": [
+      13,
+      0,
+      123,
+      61
+    ],
+    "operation": "alpha-mask-only"
+  },
+  {
+    "name": "get-jinxed",
+    "source": "get-jinxed.webp",
+    "output": "get-jinxed.webp",
+    "size": [
+      121,
+      100
+    ],
+    "source_crop": [
+      4,
+      0,
+      117,
+      92
+    ],
+    "operation": "alpha-mask-only"
+  },
+  {
+    "name": "jinx-was-here",
+    "source": "jinx-was-here.webp",
+    "output": "jinx-was-here.webp",
+    "size": [
+      216,
+      191
+    ],
+    "source_crop": [
+      28,
+      35,
+      236,
+      218
+    ],
+    "operation": "alpha-mask-only"
+  },
+  {
+    "name": "skull-crown",
+    "source": "skull-crown.webp",
+    "output": "skull-crown.webp",
+    "size": [
+      135,
+      98
+    ],
+    "source_crop": [
+      50,
+      43,
+      177,
+      133
+    ],
+    "operation": "alpha-mask-only"
+  },
+  {
+    "name": "grenade",
+    "source": "grenade.webp",
+    "output": "grenade.webp",
+    "size": [
+      96,
+      71
+    ],
+    "source_crop": [
+      4,
+      17,
+      92,
+      80
+    ],
+    "operation": "alpha-mask-only"
+  },
+  {
+    "name": "rabbit",
+    "source": "rabbit.webp",
+    "output": "rabbit.webp",
+    "size": [
+      137,
+      169
+    ],
+    "source_crop": [
+      21,
+      18,
+      150,
+      179
+    ],
+    "operation": "alpha-mask-only"
+  },
+  {
+    "name": "stitched-grin",
+    "source": "stitched-grin.webp",
+    "output": "stitched-grin.webp",
+    "size": [
+      151,
+      77
+    ],
+    "source_crop": [
+      15,
+      14,
+      158,
+      83
+    ],
+    "operation": "alpha-mask-only"
+  },
+  {
+    "name": "round-grin",
+    "source": "round-grin.webp",
+    "output": "round-grin.webp",
+    "size": [
+      73,
+      65
+    ],
+    "source_crop": [
+      0,
+      14,
+      65,
+      71
+    ],
+    "operation": "alpha-mask-only"
+  },
+  {
+    "name": "concept-skull",
+    "source": "concept-skull.webp",
+    "output": "concept-skull.webp",
+    "size": [
+      157,
+      107
+    ],
+    "source_crop": [
+      11,
+      37,
+      160,
+      136
+    ],
+    "operation": "alpha-mask-only"
+  },
+  {
+    "name": "punk-skull",
+    "source": "punk-skull.webp",
+    "output": "punk-skull.webp",
+    "size": [
+      110,
+      168
+    ],
+    "source_crop": [
+      27,
+      18,
+      129,
+      178
+    ],
+    "operation": "alpha-mask-only"
+  },
+  {
+    "name": "right-skull",
+    "source": "right-skull.webp",
+    "output": "right-skull.webp",
+    "size": [
+      143,
+      99
+    ],
+    "source_crop": [
+      22,
+      46,
+      157,
+      137
+    ],
+    "operation": "alpha-mask-only"
+  },
+  {
+    "name": "pow-pow",
+    "source": "pow-pow-blue.webp",
+    "output": "pow-pow.webp",
+    "size": [
+      76,
+      72
+    ],
+    "source_crop": [
+      5,
+      26,
+      73,
+      90
+    ],
+    "operation": "alpha-mask-only"
+  },
+  {
+    "name": "hooded-figure",
+    "source": "hooded-figure.webp",
+    "output": "hooded-figure.webp",
+    "size": [
+      113,
+      171
+    ],
+    "source_crop": [
+      0,
+      34,
+      105,
+      197
+    ],
+    "operation": "alpha-mask-only"
+  },
+  {
+    "name": "star",
+    "source": "star.webp",
+    "output": "star.webp",
+    "size": [
+      100,
+      101
+    ],
+    "source_crop": [
+      42,
+      4,
+      134,
+      97
+    ],
+    "operation": "alpha-mask-only"
+  },
+  {
+    "name": "smiley",
+    "source": "smiley.webp",
+    "output": "smiley.webp",
+    "size": [
+      78,
+      80
+    ],
+    "source_crop": [
+      13,
+      30,
+      83,
+      102
+    ],
+    "operation": "alpha-mask-only"
+  },
+  {
+    "name": "jinx-was-here-green",
+    "source": "jinx-was-here-green.webp",
+    "output": "jinx-was-here-green.webp",
+    "size": [
+      154,
+      85
+    ],
+    "source_crop": [
+      2,
+      18,
+      148,
+      95
+    ],
+    "operation": "alpha-mask-only"
+  },
+  {
+    "name": "machine",
+    "source": "machine.webp",
+    "output": "machine.webp",
+    "size": [
+      165,
+      171
+    ],
+    "source_crop": [
+      2,
+      26,
+      159,
+      189
+    ],
+    "operation": "alpha-mask-only"
+  }
+]

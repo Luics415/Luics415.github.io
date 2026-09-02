@@ -47,7 +47,7 @@ Sus objetivos principales son:
 | Fichas técnicas | Objetivo, arquitectura, flujo, decisiones, compromisos, código con procedencia, evidencia visual y relacionados. |
 | Caso de estudio | Arquitectura y decisiones de `Luics415.github.io`, fuera del catálogo de repositorios externos. |
 | Perfil | Experiencia, especialidades y servicios de desarrollo. |
-| Identidad visual | Paleta inspirada en Arcane, fondos animados, grafitis originales y emblema de ancla con “L”. |
+| Identidad visual | Paleta inspirada en Arcane, recortes de grafitis icónicos de Jinx y emblema de ancla con “L”. |
 | Metadatos | SEO básico, Open Graph, imagen social, favicon, canonical y `robots.txt`. |
 | Publicación | Flujo automático de GitHub Actions hacia GitHub Pages. |
 
@@ -77,7 +77,7 @@ El [catálogo completo](https://luics415.github.io/#projects) conserva además P
 
 La dirección visual combina azul profundo, cian, rosa y magenta. La firma digital **Luics415** y el ancla con la letra **L** funcionan como elementos centrales de marca.
 
-El fondo utiliza dos murales de grafiti originales con transparencia real: una composición panorámica para escritorio y otra vertical para móvil. Los motivos se concentran en el perímetro, sin cuadros negros ni fragmentos vecinos, y conservan un corredor central despejado para el contenido. Las animaciones ambientales permanecen detrás del mural y respetan `prefers-reduced-motion`.
+El fondo utiliza 14 sprites transparentes obtenidos de los recortes de grafitis de Jinx seleccionados para este portafolio personal. El procesamiento conserva los píxeles visibles de cada recorte y elimina únicamente fragmentos vecinos mediante máscaras alfa; no redibuja, recolorea ni sustituye los motivos. Los sprites se concentran en el perímetro, se mueven lentamente con opacidades discretas y mantienen despejado el corredor central. En móvil se muestra un subconjunto de siete piezas y `prefers-reduced-motion` desactiva el movimiento.
 
 ## Arquitectura técnica
 
@@ -87,7 +87,7 @@ Luics415.github.io/
 ├── proyectos/                Quince fichas técnicas prerenderizadas
 ├── caso-de-estudio/          Caso técnico del propio portafolio
 ├── assets/                   JavaScript, CSS e imágenes con hash
-├── graffiti-v3/              Murales WebP transparentes para escritorio y móvil
+├── graffiti-v4/              Sprites WebP transparentes de los grafitis del fondo
 ├── docs/screenshots/         Capturas estables para documentación
 ├── og.png                    Imagen para compartir el sitio
 ├── luics415-icon-*.png       Iconos de la marca
@@ -156,7 +156,7 @@ No deben editarse manualmente los archivos minificados salvo una emergencia docu
 - Texto alternativo en imágenes relevantes.
 - Respeto por `prefers-reduced-motion`.
 - Carga diferida de capturas fuera del primer viewport.
-- Selección responsive del mural: el navegador descarga únicamente la composición adecuada para el viewport.
+- Composición responsive del fondo: escritorio utiliza 14 sprites y móvil conserva siete motivos periféricos.
 - Búsqueda tolerante a tildes, filtros accesibles y contador anunciado mediante `aria-live`.
 - Menú móvil con cierre mediante `Escape` y objetivos táctiles de al menos 44 px.
 - Bloques de código con desplazamiento interno, sin provocar desbordamiento de la página.
@@ -173,7 +173,11 @@ El código original de este repositorio se distribuye bajo la [Licencia MIT](LIC
 
 ### Marca e identidad visual
 
-La Licencia MIT **no concede derechos de uso sobre la marca**. El nombre **Luics415**, su firma digital, el emblema de ancla con la letra “L”, logotipos, iconos, grafitis, banners y demás elementos distintivos están reservados por su titular. No pueden utilizarse para sugerir autoría, afiliación, patrocinio o respaldo sin autorización previa.
+La Licencia MIT **no concede derechos de uso sobre la marca**. El nombre **Luics415**, su firma digital, el emblema de ancla con la letra “L”, logotipos, iconos, banners y demás elementos distintivos están reservados por su titular. No pueden utilizarse para sugerir autoría, afiliación, patrocinio o respaldo sin autorización previa.
+
+### Grafitis del fondo
+
+Los recortes de grafitis asociados visualmente a Jinx se incorporan como ambientación de este portafolio personal y no se ofrecen bajo la Licencia MIT. El proceso de integración se limita a transparencia, recorte, posición y movimiento; la documentación no atribuye su autoría a Luics415.
 
 ### Capturas y proyectos enlazados
 
