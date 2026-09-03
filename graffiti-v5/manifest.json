@@ -1,0 +1,72 @@
+[
+  {
+    "name": "get-jinxed-sticker",
+    "source": "get-jinxed-sticker-original.png",
+    "output": "get-jinxed-sticker.png",
+    "size": [475, 475],
+    "operation": "edge-connected-alpha-mask; source RGB preserved"
+  },
+  {
+    "name": "jinx-script-complete",
+    "source": "jinx-script-complete-original.png",
+    "output": "jinx-script-complete.png",
+    "size": [689, 296],
+    "operation": "magenta alpha extraction; source RGB preserved"
+  },
+  {
+    "name": "sticker-pack",
+    "source": "sticker-pack-original.png",
+    "output": "sticker-pack.png",
+    "size": [204, 211],
+    "operation": "edge-connected-alpha-mask; source RGB preserved"
+  },
+  {
+    "name": "clouds-bullets-pattern",
+    "source": "clouds-bullets-pattern-original.png",
+    "output": "clouds-bullets-pattern.png",
+    "size": [387, 547],
+    "operation": "edge-connected-alpha-mask; source RGB preserved"
+  },
+  {
+    "name": "sticker-get-jinxed-pink",
+    "source": "sticker-pack.png",
+    "output": "sticker-get-jinxed-pink.png",
+    "size": [80, 67],
+    "operation": "connected-component extraction; source RGBA preserved"
+  },
+  {
+    "name": "sticker-jinx-blue",
+    "source": "sticker-pack.png",
+    "output": "sticker-jinx-blue.png",
+    "size": [78, 60],
+    "operation": "connected-component extraction; source RGBA preserved"
+  },
+  {
+    "name": "sticker-wing-blue",
+    "source": "sticker-pack.png",
+    "output": "sticker-wing-blue.png",
+    "size": [83, 66],
+    "operation": "connected-component extraction; source RGBA preserved"
+  },
+  {
+    "name": "sticker-purple-sketch",
+    "source": "sticker-pack.png",
+    "output": "sticker-purple-sketch.png",
+    "size": [88, 72],
+    "operation": "connected-component extraction; source RGBA preserved"
+  },
+  {
+    "name": "sticker-pow-pow-cyan",
+    "source": "sticker-pack.png",
+    "output": "sticker-pow-pow-cyan.png",
+    "size": [81, 74],
+    "operation": "connected-component extraction; source RGBA preserved"
+  },
+  {
+    "name": "sticker-bullet-pink",
+    "source": "sticker-pack.png",
+    "output": "sticker-bullet-pink.png",
+    "size": [80, 38],
+    "operation": "connected-component extraction; source RGBA preserved"
+  }
+]

@@ -77,7 +77,7 @@ El [catálogo completo](https://luics415.github.io/#projects) conserva además P
 
 La dirección visual combina azul profundo, cian, rosa y magenta. La firma digital **Luics415** y el ancla con la letra **L** funcionan como elementos centrales de marca.
 
-El fondo utiliza 14 sprites transparentes obtenidos de los recortes de grafitis de Jinx seleccionados para este portafolio personal. El procesamiento conserva los píxeles visibles de cada recorte y elimina únicamente fragmentos vecinos mediante máscaras alfa; no redibuja, recolorea ni sustituye los motivos. Los sprites se concentran en el perímetro, tienen una presencia más visible y recorren trayectorias lentas perceptibles sin invadir el corredor central. En móvil se muestra un subconjunto de siete piezas con menor opacidad, y `prefers-reduced-motion` desactiva el movimiento.
+El fondo utiliza 22 sprites transparentes obtenidos de los recortes de grafitis de Jinx seleccionados para este portafolio personal. El segundo conjunto reemplaza el rótulo `JINX` incompleto, incorpora `GET JINXED`, separa seis stickers y añade una composición de nubes y balas. El procesamiento conserva los valores RGB del material aportado y reconstruye únicamente el canal alfa; no redibuja, recolorea ni sustituye los motivos. Las piezas se distribuyen también por el centro con opacidades moderadas y trayectorias lentas. Se muestran 18 en tableta y 10 en móvil; `prefers-reduced-motion` desactiva el movimiento.
 
 ## Arquitectura técnica
 
@@ -88,6 +88,7 @@ Luics415.github.io/
 ├── caso-de-estudio/          Caso técnico del propio portafolio
 ├── assets/                   JavaScript, CSS e imágenes con hash
 ├── graffiti-v4/              Sprites WebP transparentes de los grafitis del fondo
+├── graffiti-v5/              Nuevos recortes PNG, stickers separados y manifiesto
 ├── docs/screenshots/         Capturas estables para documentación
 ├── og.png                    Imagen para compartir el sitio
 ├── luics415-icon-*.png       Iconos de la marca
