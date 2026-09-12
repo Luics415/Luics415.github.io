@@ -1,4 +1,62 @@
-import{a as e,c as t,s as n,t as r}from"./index-MXw0k0Gg.js";import{a as i,i as a,n as o,o as s,r as c,t as l}from"./Header-B2FbLMna.js";import{n as u,r as d,t as f}from"./circle-check-CZutrZOY.js";import{n as p,r as m,t as h}from"./ProjectTechnicalCover-C7xEmnWi.js";var g=s(`file-code-corner`,[[`path`,{d:`M4 12.15V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2h-3.35`,key:`1wthlu`}],[`path`,{d:`M14 2v5a1 1 0 0 0 1 1h5`,key:`wfsgrz`}],[`path`,{d:`m5 16-3 3 3 3`,key:`331omg`}],[`path`,{d:`m9 22 3-3-3-3`,key:`lsp7cz`}]]),_=s(`git-pull-request`,[[`circle`,{cx:`18`,cy:`18`,r:`3`,key:`1xkwt0`}],[`circle`,{cx:`6`,cy:`6`,r:`3`,key:`1lh9wr`}],[`path`,{d:`M13 6h3a2 2 0 0 1 2 2v7`,key:`1yeb86`}],[`line`,{x1:`6`,x2:`6`,y1:`9`,y2:`21`,key:`rroup`}]]),v=s(`image-off`,[[`line`,{x1:`2`,x2:`22`,y1:`2`,y2:`22`,key:`a6p6uj`}],[`path`,{d:`M10.41 10.41a2 2 0 1 1-2.83-2.83`,key:`1bzlo9`}],[`line`,{x1:`13.5`,x2:`6`,y1:`13.5`,y2:`21`,key:`1q0aeu`}],[`line`,{x1:`18`,x2:`21`,y1:`12`,y2:`15`,key:`5mozeu`}],[`path`,{d:`M3.59 3.59A1.99 1.99 0 0 0 3 5v14a2 2 0 0 0 2 2h14c.55 0 1.052-.22 1.41-.59`,key:`mmje98`}],[`path`,{d:`M21 15V5a2 2 0 0 0-2-2H9`,key:`43el77`}]]),y=s(`network`,[[`rect`,{x:`16`,y:`16`,width:`6`,height:`6`,rx:`1`,key:`4q2zg0`}],[`rect`,{x:`2`,y:`16`,width:`6`,height:`6`,rx:`1`,key:`8cvhb9`}],[`rect`,{x:`9`,y:`2`,width:`6`,height:`6`,rx:`1`,key:`1egb70`}],[`path`,{d:`M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3`,key:`1jsf9p`}],[`path`,{d:`M12 12V8`,key:`2874zd`}]]),b=s(`scale`,[[`path`,{d:`M12 3v18`,key:`108xh3`}],[`path`,{d:`m19 8 3 8a5 5 0 0 1-6 0zV7`,key:`zcdpyk`}],[`path`,{d:`M3 7h1a17 17 0 0 0 8-2 17 17 0 0 0 8 2h1`,key:`1yorad`}],[`path`,{d:`m5 8 3 8a5 5 0 0 1-6 0zV7`,key:`eua70x`}],[`path`,{d:`M7 21h10`,key:`1b0cd5`}]]),x=s(`triangle-alert`,[[`path`,{d:`m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3`,key:`wmoenq`}],[`path`,{d:`M12 9v4`,key:`juzpu7`}],[`path`,{d:`M12 17h.01`,key:`p32p05`}]]),S=s(`workflow`,[[`rect`,{width:`8`,height:`8`,x:`3`,y:`3`,rx:`2`,key:`by2w9f`}],[`path`,{d:`M7 11v4a2 2 0 0 0 2 2h4`,key:`xkn7yn`}],[`rect`,{width:`8`,height:`8`,x:`13`,y:`13`,rx:`2`,key:`1cgmvn`}]]),C={aussiecare:[{title:`Actualización controlada de la PWA`,language:`TypeScript · React`,description:`Registra el Service Worker respetando el subdirectorio de GitHub Pages, evita reutilizar una versión cacheada del propio worker y detecta cuándo existe un núcleo offline nuevo listo para activar.`,provenance:`verified-repository`,sourceLabel:`Código real del repositorio · commit 083c6c8 · app/service-worker-registration.tsx, líneas 32–44.`,sourceUrl:`https://github.com/Luics415/AussieCare/blob/083c6c8e08954fd1cc917fe8e5323477b34d36cd/app/service-worker-registration.tsx#L32-L44`,code:`navigator.serviceWorker.register(withBasePath('/sw.js'), {
+import{a as e,c as t,s as n,t as r}from"./index-17mnOp0j.js";import{a as i,i as a,n as o,o as s,r as c,t as l}from"./Header-xAs7Cehc.js";import{n as u,r as d,t as f}from"./circle-check-CH-Neu84.js";import{n as p,r as m,t as h}from"./ProjectTechnicalCover-DejJOZb-.js";var g=s(`file-code-corner`,[[`path`,{d:`M4 12.15V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2h-3.35`,key:`1wthlu`}],[`path`,{d:`M14 2v5a1 1 0 0 0 1 1h5`,key:`wfsgrz`}],[`path`,{d:`m5 16-3 3 3 3`,key:`331omg`}],[`path`,{d:`m9 22 3-3-3-3`,key:`lsp7cz`}]]),_=s(`git-pull-request`,[[`circle`,{cx:`18`,cy:`18`,r:`3`,key:`1xkwt0`}],[`circle`,{cx:`6`,cy:`6`,r:`3`,key:`1lh9wr`}],[`path`,{d:`M13 6h3a2 2 0 0 1 2 2v7`,key:`1yeb86`}],[`line`,{x1:`6`,x2:`6`,y1:`9`,y2:`21`,key:`rroup`}]]),v=s(`image-off`,[[`line`,{x1:`2`,x2:`22`,y1:`2`,y2:`22`,key:`a6p6uj`}],[`path`,{d:`M10.41 10.41a2 2 0 1 1-2.83-2.83`,key:`1bzlo9`}],[`line`,{x1:`13.5`,x2:`6`,y1:`13.5`,y2:`21`,key:`1q0aeu`}],[`line`,{x1:`18`,x2:`21`,y1:`12`,y2:`15`,key:`5mozeu`}],[`path`,{d:`M3.59 3.59A1.99 1.99 0 0 0 3 5v14a2 2 0 0 0 2 2h14c.55 0 1.052-.22 1.41-.59`,key:`mmje98`}],[`path`,{d:`M21 15V5a2 2 0 0 0-2-2H9`,key:`43el77`}]]),y=s(`network`,[[`rect`,{x:`16`,y:`16`,width:`6`,height:`6`,rx:`1`,key:`4q2zg0`}],[`rect`,{x:`2`,y:`16`,width:`6`,height:`6`,rx:`1`,key:`8cvhb9`}],[`rect`,{x:`9`,y:`2`,width:`6`,height:`6`,rx:`1`,key:`1egb70`}],[`path`,{d:`M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3`,key:`1jsf9p`}],[`path`,{d:`M12 12V8`,key:`2874zd`}]]),b=s(`scale`,[[`path`,{d:`M12 3v18`,key:`108xh3`}],[`path`,{d:`m19 8 3 8a5 5 0 0 1-6 0zV7`,key:`zcdpyk`}],[`path`,{d:`M3 7h1a17 17 0 0 0 8-2 17 17 0 0 0 8 2h1`,key:`1yorad`}],[`path`,{d:`m5 8 3 8a5 5 0 0 1-6 0zV7`,key:`eua70x`}],[`path`,{d:`M7 21h10`,key:`1b0cd5`}]]),x=s(`triangle-alert`,[[`path`,{d:`m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3`,key:`wmoenq`}],[`path`,{d:`M12 9v4`,key:`juzpu7`}],[`path`,{d:`M12 17h.01`,key:`p32p05`}]]),S=s(`workflow`,[[`rect`,{width:`8`,height:`8`,x:`3`,y:`3`,rx:`2`,key:`by2w9f`}],[`path`,{d:`M7 11v4a2 2 0 0 0 2 2h4`,key:`xkn7yn`}],[`rect`,{width:`8`,height:`8`,x:`13`,y:`13`,rx:`2`,key:`1cgmvn`}]]),C={"qr-voxel-studio":[{title:`Decodificación local tolerante a inversión`,language:`TypeScript · jsQR`,description:`Normaliza el archivo, prueba orientaciones de contraste opuestas y devuelve un contrato explícito con contenido y dimensiones; un fallo produce un mensaje accionable para el usuario.`,provenance:`verified-repository`,sourceLabel:`Código real del repositorio · commit 1fedc2a · src/features/qr-engine/decode-qr.ts, líneas 11–29.`,sourceUrl:`https://github.com/Luics415/QRVoxelStudio/blob/1fedc2a963159fbb693abe25e7b1e6fa8d55ffac/src/features/qr-engine/decode-qr.ts#L11-L29`,code:`export async function decodeQRFromFile(file: File): Promise<DecodedQR> {
+  const { imageData, width, height } = await normalizeImageFile(file);
+
+  const result = jsQR(imageData.data, width, height, {
+    inversionAttempts: "attemptBoth",
+  });
+
+  if (!result) {
+    throw new Error(
+      "No pude detectar un QR válido en la imagen. " +
+      "Prueba con una imagen más nítida, frontal y con margen blanco alrededor.",
+    );
+  }
+
+  return {
+    data: result.data,
+    binaryData: Array.from(result.binaryData),
+    sourceWidth: width,
+    sourceHeight: height,
+  };
+}`},{title:`Matriz compartible empaquetada por bits`,language:`TypeScript`,description:`Comprime cada módulo del QR en un bit y convierte el resultado a Base64 URL-safe, evitando incluir el archivo original en el enlace compartido.`,provenance:`verified-repository`,sourceLabel:`Código real del repositorio · commit 1fedc2a · src/features/share/share-payload.ts, líneas 51–68.`,sourceUrl:`https://github.com/Luics415/QRVoxelStudio/blob/1fedc2a963159fbb693abe25e7b1e6fa8d55ffac/src/features/share/share-payload.ts#L51-L68`,code:`function packMatrix(matrix: QRMatrix) {
+  const size = matrix.length;
+  const totalBits = size * size;
+  const bytes = new Uint8Array(Math.ceil(totalBits / 8));
+  let bitIndex = 0;
+
+  for (let row = 0; row < size; row += 1) {
+    for (let col = 0; col < size; col += 1) {
+      if (matrix[row]?.[col]) {
+        const byteIndex = Math.floor(bitIndex / 8);
+        const shift = 7 - (bitIndex % 8);
+        bytes[byteIndex] |= 1 << shift;
+      }
+      bitIndex += 1;
+    }
+  }
+
+  return bytesToBase64Url(bytes);
+}`},{title:`Morph 3D con presupuesto de actualización`,language:`TypeScript · React Three Fiber`,description:`Deriva las fases de la transición bosque–QR y limita las actualizaciones pesadas según dispositivo y estado para equilibrar fluidez y consumo.`,provenance:`verified-repository`,sourceLabel:`Código real del repositorio · commit 1fedc2a · src/components/visual/qr-forest-3d.tsx, líneas 1290–1310.`,sourceUrl:`https://github.com/Luics415/QRVoxelStudio/blob/1fedc2a963159fbb693abe25e7b1e6fa8d55ffac/src/components/visual/qr-forest-3d.tsx#L1290-L1310`,code:`useFrame(({ clock }) => {
+  const morph = smoother(progress);
+  const moduleReveal = smoothstep(0.46, 0.88, morph);
+  const qrLock = smoothstep(0.82, 0.99, morph);
+  const organic = 1 - smoothstep(0.2, 0.72, morph);
+  const leafFade = 1 - smoothstep(0.93, 0.996, morph);
+  const trunkFade = 1 - smoothstep(0.56, 0.82, morph);
+
+  if (worldRef.current) {
+    worldRef.current.position.y =
+      Math.sin(clock.elapsedTime * 0.48) * 0.08 *
+      (1 - smoothstep(0.32, 0.8, morph));
+  }
+
+  const transitioning = progress > 0.015 && progress < 0.985;
+  const minHeavyFrame = transitioning
+    ? quality === "mobile" ? 1 / 22 : 1 / 30
+    : quality === "mobile" ? 1 / 16 : 1 / 24;
+  if (clock.elapsedTime - lastHeavyFrameRef.current < minHeavyFrame) return;
+  lastHeavyFrameRef.current = clock.elapsedTime;
+});`}],aussiecare:[{title:`Actualización controlada de la PWA`,language:`TypeScript · React`,description:`Registra el Service Worker respetando el subdirectorio de GitHub Pages, evita reutilizar una versión cacheada del propio worker y detecta cuándo existe un núcleo offline nuevo listo para activar.`,provenance:`verified-repository`,sourceLabel:`Código real del repositorio · commit 083c6c8 · app/service-worker-registration.tsx, líneas 32–44.`,sourceUrl:`https://github.com/Luics415/AussieCare/blob/083c6c8e08954fd1cc917fe8e5323477b34d36cd/app/service-worker-registration.tsx#L32-L44`,code:`navigator.serviceWorker.register(withBasePath('/sw.js'), {
   scope: withBasePath('/'),
   updateViaCache: 'none'
 }).then(async (registration) => {
@@ -486,6 +544,18 @@ const sceneByKind: Record<ConceptKind, string> = {
 
 export function describeScene(kind: ConceptKind) {
   return sceneByKind[kind];
+}`,disclaimer:k}},"qr-voxel":{architecture:`Una aplicación estática ejecuta todo el pipeline en el navegador: normaliza la imagen, decodifica el contenido, reconstruye una matriz binaria y la entrega a un renderer WebGL desacoplado. El estado QRSlot conecta procesamiento, perfil estacional, exportación y enlaces compartidos sin depender de una API o base de datos.`,flow:[`El archivo se valida y normaliza en un canvas antes de intentar la lectura con jsQR.`,`El contenido decodificado se reconstruye como una matriz QR y se almacena junto con su perfil visual.`,`React Three Fiber convierte los módulos activos en instancias voxel y permite interpolar entre bosque y matriz cenital.`,`La exportación captura el canvas; el enlace compartido serializa una versión compacta de la matriz y la estación.`],decisions:[`Reconstruir la matriz desde el contenido desacopla el renderer de los píxeles y del formato del archivo original.`,`Usar InstancedMesh reduce el costo de representar muchas piezas repetidas de troncos, hojas y módulos.`,`Versionar y empaquetar la matriz por bits mantiene los enlaces reproducibles sin subir la imagen a un servidor.`],tradeoffs:[`El procesamiento local mejora privacidad y elimina infraestructura, pero traslada decodificación y exportación al dispositivo.`,`WebGL ofrece profundidad y animación, aunque necesita niveles de calidad y límites de frecuencia para móviles modestos.`,`Regenerar la matriz desde el contenido preserva el QR funcional, pero no reproduce defectos, logotipos o estilización del archivo original.`],codeSample:{title:`Frontera conceptual entre QR y escena 3D`,language:`TypeScript`,description:`Modelo mínimo de un pipeline donde el renderer depende de una matriz normalizada, no del archivo cargado.`,code:`type Matrix = Array<Array<0 | 1>>;
+
+type GardenInput = {
+  matrix: Matrix;
+  season: "spring" | "summer" | "autumn" | "winter";
+};
+
+export async function buildGarden(file: File): Promise<GardenInput> {
+  const content = await decodeLocally(file);
+  const matrix = reconstructMatrix(content);
+
+  return { matrix, season: "spring" };
 }`,disclaimer:k}},"rpg-web":{architecture:`El juego organiza datos, mapas, recursos audiovisuales y lógica de eventos como capas separadas. El motor procesa una cola de acciones y actualiza la escena en ciclos discretos, mientras el empaquetado de escritorio incorpora la aplicación web y sus recursos en un ejecutable local.`,flow:[`La entrada del jugador se traduce en una orden de movimiento, interacción o combate.`,`El motor valida la orden contra el estado del mapa y encola los eventos resultantes.`,`Cada evento actualiza el estado y después la escena refleja los cambios visuales y sonoros.`],decisions:[`Conservar datos y recursos fuera de la lógica facilita ajustar contenido sin alterar el bucle principal.`,`Procesar eventos de forma secuencial evita que diálogos, combates y transiciones compitan por el estado.`,`Reutilizar un motor orientado a eventos acelera la construcción de mapas y reglas narrativas.`],tradeoffs:[`El motor reduce trabajo de infraestructura, pero condiciona la organización y las capacidades del juego.`,`Empaquetar todos los recursos mejora ejecución local, aunque aumenta el tamaño de distribución.`,`Muchos eventos activos enriquecen los mapas, pero requieren limitar actualizaciones innecesarias.`],codeSample:{title:`Procesamiento secuencial de eventos`,language:`JavaScript`,description:`Ejemplo conceptual de una cola mínima que evita ejecutar dos acciones del juego al mismo tiempo.`,code:`const eventQueue = [];
 
 export function enqueueEvent(event) {

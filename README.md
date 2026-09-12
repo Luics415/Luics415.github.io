@@ -27,7 +27,7 @@ Sitio profesional de **Luics415**, desarrollador de software enfocado en aplicac
 
 ## Objetivo
 
-El portafolio presenta los **12 repositorios externos de la lista pública de Stars de Luics415**, tres experimentos históricos y un caso de estudio del propio sitio. Cada ficha comunica no solo el resultado visual, sino también el objetivo, la arquitectura, el flujo de ejecución, las decisiones técnicas, los compromisos y la evidencia disponible.
+El portafolio presenta los **13 repositorios externos de la lista pública de Stars de Luics415**, tres experimentos históricos y un caso de estudio del propio sitio. Cada ficha comunica no solo el resultado visual, sino también el objetivo, la arquitectura, el flujo de ejecución, las decisiones técnicas, los compromisos y la evidencia disponible.
 
 Sus objetivos principales son:
 
@@ -42,7 +42,7 @@ Sus objetivos principales son:
 | Área | Contenido |
 | --- | --- |
 | Portada | Firma digital de Luics415, presentación profesional y accesos principales. |
-| Proyectos | Cinco casos destacados para reclutamiento, catálogo completo de Stars y experimentos separados. |
+| Proyectos | Seis casos destacados para reclutamiento, catálogo completo de Stars y experimentos separados. |
 | Exploración | Búsqueda por proyecto o tecnología y filtros por Web, Escritorio, Móvil, Videojuegos, Visión y Educación. |
 | Fichas técnicas | Objetivo, arquitectura, flujo, decisiones, compromisos, código con procedencia, evidencia visual y relacionados. |
 | Caso de estudio | Arquitectura y decisiones de `Luics415.github.io`, fuera del catálogo de repositorios externos. |
@@ -53,13 +53,14 @@ Sus objetivos principales son:
 
 ## Proyectos destacados
 
-La selección principal para conversación laboral reúne cinco proyectos:
+La selección principal para conversación laboral reúne seis proyectos:
 
-1. [AussieCare](https://luics415.github.io/proyectos/aussiecare/): PWA educativa, cinematográfica y offline-first.
-2. [Bio-Gesture Control Android](https://luics415.github.io/proyectos/bio-gesture-control-android/): visión por computadora, transformación de coordenadas y Accesibilidad en Android.
-3. [KASA Service Tracker](https://luics415.github.io/proyectos/kasa-service-tracker/): aplicación .NET 8 con persistencia JSON, trazabilidad y exportación XLSX.
-4. [Tlalne-Priority](https://luics415.github.io/proyectos/tlalne-priority/): C++20, cola de prioridad, índice por folio y persistencia CSV.
-5. [Dev Visualizer](https://luics415.github.io/proyectos/dev-visualizer/): atlas técnico estático con manifiesto central y escenas accesibles.
+1. [QR Voxel Studio](https://luics415.github.io/proyectos/qr-voxel-studio/): procesamiento local de QR, renderizado WebGL, escenas voxel y enlaces compactos.
+2. [AussieCare](https://luics415.github.io/proyectos/aussiecare/): PWA educativa, cinematográfica y offline-first.
+3. [Bio-Gesture Control Android](https://luics415.github.io/proyectos/bio-gesture-control-android/): visión por computadora, transformación de coordenadas y Accesibilidad en Android.
+4. [KASA Service Tracker](https://luics415.github.io/proyectos/kasa-service-tracker/): aplicación .NET 8 con persistencia JSON, trazabilidad y exportación XLSX.
+5. [Tlalne-Priority](https://luics415.github.io/proyectos/tlalne-priority/): C++20, cola de prioridad, índice por folio y persistencia CSV.
+6. [Dev Visualizer](https://luics415.github.io/proyectos/dev-visualizer/): atlas técnico estático con manifiesto central y escenas accesibles.
 
 El [catálogo completo](https://luics415.github.io/#projects) conserva además Palabra y Oración, GX Pets y ARMY Edition, Bio-Gesture Control Pro, Sistema de Becas y las dos ediciones de EternalMazesRPG.
 
@@ -84,7 +85,7 @@ El fondo utiliza 22 sprites transparentes obtenidos de los recortes de grafitis 
 ```text
 Luics415.github.io/
 ├── index.html                 Página principal prerenderizada
-├── proyectos/                Quince fichas técnicas prerenderizadas
+├── proyectos/                Dieciséis fichas técnicas prerenderizadas
 ├── caso-de-estudio/          Caso técnico del propio portafolio
 ├── assets/                   JavaScript, CSS e imágenes con hash
 ├── graffiti-v4/              Sprites WebP transparentes de los grafitis del fondo
@@ -157,7 +158,7 @@ No deben editarse manualmente los archivos minificados salvo una emergencia docu
 - Texto alternativo en imágenes relevantes.
 - Respeto por `prefers-reduced-motion`.
 - Carga diferida de capturas fuera del primer viewport.
-- Composición responsive del fondo: escritorio utiliza 14 sprites y móvil conserva siete motivos periféricos.
+- Composición responsive del fondo: escritorio utiliza 22 sprites, tableta 18 y móvil conserva 10 motivos.
 - Búsqueda tolerante a tildes, filtros accesibles y contador anunciado mediante `aria-live`.
 - Menú móvil con cierre mediante `Escape` y objetivos táctiles de al menos 44 px.
 - Bloques de código con desplazamiento interno, sin provocar desbordamiento de la página.
