@@ -1,0 +1,29 @@
+name: Reporte de Incidencia
+description: Informa un error visual, funcional o de responsividad en el portafolio.
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: ¿Qué ocurrió?
+      description: Describe el fallo observado, sección afectada o error de consola.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Comportamiento esperado
+      description: ¿Cómo debería funcionar o visualizarse correctamente?
+    validations:
+      required: true
+  - type: input
+    id: viewport
+    attributes:
+      label: Dispositivo / Navegador / Resolución
+      description: Ejemplo: iPhone 14 Pro (393px), Chrome Desktop 1920x1080.
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidencia o Capturas
+      description: Pega aquí detalles adicionales, capturas o mensajes de error.

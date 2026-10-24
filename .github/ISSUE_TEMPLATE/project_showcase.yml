@@ -1,0 +1,24 @@
+name: Nuevo Proyecto o Showcase
+description: Solicita la integración de un nuevo proyecto, caso de estudio o actualización de sección.
+title: "[Showcase]: "
+labels: [enhancement]
+body:
+  - type: input
+    id: project_name
+    attributes:
+      label: Nombre del Proyecto
+      description: Ejemplo: Bio Gesture Control Pro, KASA AutoBox Cloud.
+    validations:
+      required: true
+  - type: textarea
+    id: project_summary
+    attributes:
+      label: Descripción y Métricas Clave
+      description: Stack tecnológico, arquitectura, métricas de rendimiento y enlaces.
+    validations:
+      required: true
+  - type: textarea
+    id: visual_assets
+    attributes:
+      label: Recursos Visuales
+      description: Capturas de pantalla, diagramas de arquitectura o demostraciones.
