@@ -1,0 +1,141 @@
+name: Orquestador Maestro del Portafolio
+
+on:
+  schedule:
+    - cron: "0 8 * * 1"
+  workflow_dispatch:
+    inputs:
+      modo:
+        description: "Modo de ejecución"
+        required: true
+        default: audit
+        type: choice
+        options:
+          - audit
+          - authorized
+      autorizacion:
+        description: "Solo para mutaciones: AUTORIZO EJECUCIÓN DIRECTA"
+        required: false
+        type: string
+      instruccion:
+        description: "Alcance exacto de la operación autorizada"
+        required: false
+        type: string
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  auditoria:
+    name: Auditoría Automática Read-Only
+    if: ${{ github.event_name == 'schedule' || inputs.modo == 'audit' || inputs.modo == '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar el repositorio
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 10
+
+      - name: Preparar expediente fechado
+        shell: bash
+        run: |
+          set -euo pipefail
+          fecha="$(date -u +%F)"
+          run_id="${fecha//-/}-$GITHUB_RUN_ID"
+          mkdir -p "docs/FechaAgente/$fecha"
+          cat > "docs/FechaAgente/$fecha/00-contexto.yml" <<EOF
+          id_de_ejecucion: "$run_id"
+          fecha_utc: "$fecha"
+          modo: auditoria_automatica
+          fase: 01-definir
+          entrada:
+            instruccion: "Auditoría automática programada del Portafolio"
+            artefacto_anterior: null
+          decisiones:
+            adoptadas: []
+            pendientes: []
+          riesgos: []
+          evidencia: []
+          autorizaciones_requeridas: []
+          siguiente_fase: 01-definir
+          EOF
+
+      - name: Ejecutar comprobaciones del Portafolio
+        shell: bash
+        run: |
+          set -euo pipefail
+          fecha="$(date -u +%F)"
+          reporte="docs/FechaAgente/$fecha/auditoria.md"
+          {
+            echo "# Auditoría Automática del Portafolio — $fecha"
+            echo
+            echo "Modo: \`auditoria_automatica\` (solo lectura)."
+            echo
+            echo "## Estado del Repositorio"
+            echo '```text'
+            git status --short
+            git log -5 --oneline
+            echo '```'
+            echo
+            echo "## Verificación de Integridad de Documentos"
+            if [ -f "cv-luis-rivera.pdf" ]; then
+              echo "- [x] Documento oficial CV presente ($(ls -lh cv-luis-rivera.pdf | awk '{print $5}'))."
+            else
+              echo "- [ ] ALERTA: cv-luis-rivera.pdf no encontrado."
+            fi
+            if [ -f "cv-luis-rivera.png" ]; then
+              echo "- [x] Miniatura de previsualización CV presente."
+            fi
+            echo
+            echo "## Operaciones que requieren Autorización Directa"
+            echo "- Modificación de código fuente o estilos."
+            echo "- Recompilación de bundle y sincronización estática."
+            echo "- Creación de ramas y Pull Requests."
+            echo "- Actualización de GitHub Projects."
+          } > "$reporte"
+
+      - name: Publicar expediente
+        uses: actions/upload-artifact@v4
+        with:
+          name: expediente-portafolio-${{ github.run_id }}
+          path: docs/FechaAgente/
+          if-no-files-found: error
+
+      - name: Registrar o Actualizar Issue de Auditoría
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          fecha="$(date -u +%F)"
+          titulo="Auditoría del Portafolio — $fecha"
+          issue_number="$(gh issue list --state open --search "\"$titulo\" in:title" --json number,title --jq '.[] | select(.title == "'"$titulo"'") | .number' | head -n 1 || true)"
+          if [ -n "$issue_number" ]; then
+            gh issue edit "$issue_number" --body-file "docs/FechaAgente/$fecha/auditoria.md"
+          else
+            gh issue create --title "$titulo" --body-file "docs/FechaAgente/$fecha/auditoria.md" --label "documentation" || true
+          fi
+
+  autorizado:
+    name: Ejecución Autorizada y Protegida
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.modo == 'authorized' && inputs.autorizacion == 'AUTORIZO EJECUCIÓN DIRECTA' }}
+    runs-on: ubuntu-latest
+    environment: orchestrator-authorized
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Validar alcance autorizado
+        env:
+          AUTHORIZED_INSTRUCTION: ${{ inputs.instruccion }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$AUTHORIZED_INSTRUCTION" || {
+            echo "::error::Falta la instrucción exacta y acotada de la operación."
+            exit 1
+          }
+          echo "Alcance autorizado: $AUTHORIZED_INSTRUCTION"
+          echo "Ejecución de cambios aprobada por el operador."

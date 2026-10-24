@@ -1,0 +1,78 @@
+version: 1
+nombre: maestro-orquestador-portafolio
+repositorio: Luics415/Luics415.github.io
+project:
+  nombre: Portfolio Ecosystem
+  politica: >
+    La API de GitHub Projects no se invoca automáticamente. Cualquier cambio de estado
+    requiere autorización directa, confirmación del operador y evidencia verificable.
+
+modos:
+  auditoria_automatica:
+    predeterminado: true
+    mutaciones_permitidas:
+      - crear_issue_de_auditoria
+      - actualizar_issue_de_auditoria
+      - publicar_artifacto_de_workflow
+    mutaciones_prohibidas:
+      - modificar_codigo_fuente
+      - ejecutar_npm_audit_fix_force
+      - crear_pull_request_sin_orden
+      - crear_subtareas
+      - cambiar_estado_del_project
+      - invocar_ejecucion_autorizada
+  ejecucion_autorizada:
+    requiere:
+      - instruccion_directa_del_usuario
+      - workflow_dispatch
+      - confirmacion_exacta: "AUTORIZO EJECUCIÓN DIRECTA"
+      - aprobacion_del_entorno: orchestrator-authorized
+    puede_habilitar:
+      - cambios_de_codigo_en_rama
+      - compilacion_y_sincronizacion_estatica
+      - pull_requests_documentados
+      - actualizacion_de_estados_del_project
+
+fases:
+  - id: 01-definir
+    habilidad: .github/skills/01-definir.md
+    artefacto: definicion.yml
+  - id: 02-planificar
+    habilidad: .github/skills/02-planificar.md
+    artefacto: plan.yml
+  - id: 03-construir
+    habilidad: .github/skills/03-construir.md
+    artefacto: construccion.yml
+  - id: 04-verificar
+    habilidad: .github/skills/04-verificar.md
+    artefacto: verificacion.yml
+  - id: 05-revisar
+    habilidad: .github/skills/05-revisar.md
+    artefacto: revision.yml
+  - id: 06-aprobar
+    habilidad: .github/skills/06-aprobar.md
+    artefacto: aprobacion.yml
+
+handoff:
+  directorio: docs/FechaAgente/<AAAA-MM-DD>/
+  contrato: docs/FechaAgente/PLANTILLA_AUDITORIA.md
+  campos_obligatorios:
+    - id_de_ejecucion
+    - modo
+    - fase
+    - entrada
+    - decisiones
+    - riesgos
+    - evidencia
+    - autorizaciones_requeridas
+    - siguiente_fase
+  regla: >
+    Ninguna fase puede considerarse completa sin entregar su respectivo artefacto estructurado
+    y una lista explícita de bloqueos, riesgos o autorizaciones pendientes.
+
+notificaciones:
+  estado: preparado_sin_integracion
+  canales_futuros:
+    - correo
+    - webhook_privado
+  secretos: no_configurados
