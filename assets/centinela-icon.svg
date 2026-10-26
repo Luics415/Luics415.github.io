@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Filtros de resplandor neón -->
+    <filter id="glow-cyan" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+    <filter id="glow-purple" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <!-- Gradientes -->
+    <radialGradient id="bg-grad" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#111827" />
+      <stop offset="60%" stop-color="#080d1a" />
+      <stop offset="100%" stop-color="#030712" />
+    </radialGradient>
+    <linearGradient id="grad-cyan" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00f0ff" />
+      <stop offset="100%" stop-color="#3b82f6" />
+    </linearGradient>
+    <linearGradient id="grad-purple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#c084fc" />
+      <stop offset="100%" stop-color="#a855f7" />
+    </linearGradient>
+    <linearGradient id="grad-armor" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b" />
+      <stop offset="50%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#090d16" />
+    </linearGradient>
+    <linearGradient id="grad-visor" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00f0ff" />
+      <stop offset="50%" stop-color="#67e8f9" />
+      <stop offset="100%" stop-color="#00f0ff" />
+    </linearGradient>
+  </defs>
+
+  <!-- Fondo Dark Obsidian -->
+  <rect width="512" height="512" rx="100" fill="url(#bg-grad)" />
+
+  <!-- Patrón de cuadrícula ciberespacial sutil -->
+  <g opacity="0.12" stroke="#00f0ff" stroke-width="1">
+    <path d="M 0 64 H 512 M 0 128 H 512 M 0 192 H 512 M 0 256 H 512 M 0 320 H 512 M 0 384 H 512 M 0 448 H 512" />
+    <path d="M 64 0 V 512 M 128 0 V 512 M 192 0 V 512 M 256 0 V 512 M 320 0 V 512 M 384 0 V 512 M 448 0 V 512" />
+  </g>
+
+  <!-- Anillo exterior y marcadores de calibración -->
+  <circle cx="256" cy="256" r="230" fill="none" stroke="url(#grad-purple)" stroke-width="2" opacity="0.3" />
+  <circle cx="256" cy="256" r="220" fill="none" stroke="url(#grad-cyan)" stroke-width="2.5" stroke-dasharray="14 8" opacity="0.6" />
+  <circle cx="256" cy="256" r="206" fill="none" stroke="#00f0ff" stroke-width="1" opacity="0.4" />
+
+  <!-- Marcas de cuadrante angular -->
+  <path d="M 256 16 V 36 M 256 476 V 496 M 16 256 H 36 M 476 256 H 496" stroke="#00f0ff" stroke-width="4" stroke-linecap="round" />
+
+  <!-- Silueta de Armadura Cibernética (Hombros / Cuello) -->
+  <path d="M 120 450 L 170 380 L 256 410 L 342 380 L 392 450 Z" fill="url(#grad-armor)" stroke="#334155" stroke-width="2" />
+  <path d="M 170 380 L 256 410 L 342 380" fill="none" stroke="url(#grad-cyan)" stroke-width="2" opacity="0.8" />
+
+  <!-- Cabeza / Casco del Centinela (Geometría angular facetada) -->
+  <!-- Placa base de cráneo -->
+  <polygon points="190,130 256,90 322,130 350,210 256,240 162,210" fill="url(#grad-armor)" stroke="url(#grad-purple)" stroke-width="2" />
+  
+  <!-- Placas laterales de mejilla y mandíbula -->
+  <polygon points="162,210 190,320 256,360 210,340 170,270" fill="#0f172a" stroke="#1e293b" stroke-width="1.5" />
+  <polygon points="350,210 322,320 256,360 302,340 342,270" fill="#0f172a" stroke="#1e293b" stroke-width="1.5" />
+  <polygon points="210,340 256,360 302,340 256,375" fill="url(#grad-armor)" stroke="url(#grad-cyan)" stroke-width="1.5" />
+
+  <!-- Visor Cibernético Neón (El Ojo del Centinela) -->
+  <polygon points="175,215 256,232 337,215 325,245 256,260 187,245" fill="url(#grad-visor)" filter="url(#glow-cyan)" />
+  <path d="M 210 236 L 256 244 L 302 236" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.9" />
+
+  <!-- Cresta frontal y líneas de datos -->
+  <path d="M 256 90 V 165" stroke="url(#grad-cyan)" stroke-width="3" filter="url(#glow-cyan)" />
+  <circle cx="256" cy="170" r="4" fill="#00f0ff" filter="url(#glow-cyan)" />
+
+  <!-- NÚCLEO CENTRAL: Glifo del Ancla Cibernética de Luis Rivera (@Luics415) -->
+  <g transform="translate(0, 15)">
+    <!-- Aura de ancla -->
+    <circle cx="256" cy="295" r="14" fill="none" stroke="url(#grad-cyan)" stroke-width="3.5" filter="url(#glow-cyan)" />
+    <!-- Mástil vertical del ancla -->
+    <line x1="256" y1="309" x2="256" y2="355" stroke="url(#grad-cyan)" stroke-width="4" stroke-linecap="round" filter="url(#glow-cyan)" />
+    <!-- Barra transversal -->
+    <line x1="236" y1="322" x2="276" y2="322" stroke="url(#grad-purple)" stroke-width="3.5" stroke-linecap="round" filter="url(#glow-purple)" />
+    <circle cx="236" cy="322" r="3" fill="#a855f7" />
+    <circle cx="276" cy="322" r="3" fill="#a855f7" />
+    <!-- Brazos curvos del ancla con flechas de pulso -->
+    <path d="M 226 338 Q 256 370 286 338" fill="none" stroke="url(#grad-cyan)" stroke-width="4" stroke-linecap="round" filter="url(#glow-cyan)" />
+    <polygon points="222,333 226,342 231,335" fill="#00f0ff" />
+    <polygon points="290,333 286,342 281,335" fill="#00f0ff" />
+  </g>
+
+  <!-- Puntos de Conexión y Circuitos Laterales -->
+  <g stroke="#00f0ff" stroke-width="1.5" opacity="0.7">
+    <path d="M 120 220 L 90 220 L 70 240" fill="none" />
+    <circle cx="70" cy="240" r="3" fill="#00f0ff" filter="url(#glow-cyan)" />
+    <path d="M 392 220 L 422 220 L 442 240" fill="none" />
+    <circle cx="442" cy="240" r="3" fill="#00f0ff" filter="url(#glow-cyan)" />
+  </g>
+
+  <!-- Tipografía Técnica Inferior -->
+  <text x="256" y="468" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'Courier New', monospace" font-size="14" font-weight="bold" fill="#00f0ff" letter-spacing="5" filter="url(#glow-cyan)">
+    CENTINELA // AGENT 07
+  </text>
+  <text x="256" y="486" text-anchor="middle" font-family="'Segoe UI', system-ui, sans-serif" font-size="10" fill="#94a3b8" letter-spacing="2">
+    LUICS415 AUTONOMOUS CORE
+  </text>
+</svg>

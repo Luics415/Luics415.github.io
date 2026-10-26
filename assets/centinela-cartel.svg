@@ -1,0 +1,210 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="100%" height="100%">
+  <defs>
+    <!-- Filtros Neón -->
+    <filter id="cartel-glow-cyan" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+    <filter id="cartel-glow-purple" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="12" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <!-- Gradientes -->
+    <radialGradient id="cartel-bg" cx="50%" cy="40%" r="75%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="45%" stop-color="#070c18" />
+      <stop offset="100%" stop-color="#020409" />
+    </radialGradient>
+    <linearGradient id="c-cyan" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00f0ff" />
+      <stop offset="100%" stop-color="#3b82f6" />
+    </linearGradient>
+    <linearGradient id="c-purple" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#c084fc" />
+      <stop offset="100%" stop-color="#a855f7" />
+    </linearGradient>
+    <linearGradient id="title-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="35%" stop-color="#00f0ff" />
+      <stop offset="100%" stop-color="#a855f7" />
+    </linearGradient>
+    <linearGradient id="grid-fade" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#00f0ff" stop-opacity="0" />
+      <stop offset="30%" stop-color="#00f0ff" stop-opacity="0.15" />
+      <stop offset="100%" stop-color="#00f0ff" stop-opacity="0.5" />
+    </linearGradient>
+  </defs>
+
+  <!-- Fondo Espacial Profundo -->
+  <rect width="1920" height="1080" fill="url(#cartel-bg)" />
+
+  <!-- Perspectiva de Cuadrícula Cyberpunk en el Suelo -->
+  <g opacity="0.45" stroke="url(#grid-fade)" stroke-width="1.5">
+    <!-- Líneas de fuga que convergen en el horizonte (y=580) -->
+    <line x1="960" y1="580" x2="-200" y2="1080" />
+    <line x1="960" y1="580" x2="100" y2="1080" />
+    <line x1="960" y1="580" x2="400" y2="1080" />
+    <line x1="960" y1="580" x2="700" y2="1080" />
+    <line x1="960" y1="580" x2="960" y2="1080" stroke="#00f0ff" stroke-width="2" />
+    <line x1="960" y1="580" x2="1220" y2="1080" />
+    <line x1="960" y1="580" x2="1520" y2="1080" />
+    <line x1="960" y1="580" x2="1820" y2="1080" />
+    <line x1="960" y1="580" x2="2120" y2="1080" />
+    <!-- Líneas horizontales de perspectiva -->
+    <line x1="0" y1="600" x2="1920" y2="600" />
+    <line x1="0" y1="630" x2="1920" y2="630" />
+    <line x1="0" y1="675" x2="1920" y2="675" />
+    <line x1="0" y1="740" x2="1920" y2="740" />
+    <line x1="0" y1="830" x2="1920" y2="830" />
+    <line x1="0" y1="950" x2="1920" y2="950" />
+  </g>
+
+  <!-- Aura Resplandeciente del Horizonte -->
+  <line x1="0" y1="580" x2="1920" y2="580" stroke="url(#c-cyan)" stroke-width="2" filter="url(#cartel-glow-cyan)" opacity="0.8" />
+  <circle cx="960" cy="580" r="380" fill="none" stroke="url(#c-purple)" stroke-width="2" opacity="0.25" stroke-dasharray="8 6" />
+
+  <!-- Holograma de Ancla Gigante en el Fondo Central (Emblema Luics415) -->
+  <g transform="translate(960, 480) scale(1.6)" opacity="0.18">
+    <circle cx="0" cy="-60" r="30" fill="none" stroke="#00f0ff" stroke-width="5" />
+    <line x1="0" y1="-30" x2="0" y2="80" stroke="#00f0ff" stroke-width="6" />
+    <line x1="-50" y1="0" x2="50" y2="0" stroke="#a855f7" stroke-width="6" />
+    <path d="M -70 40 Q 0 110 70 40" fill="none" stroke="#00f0ff" stroke-width="7" />
+  </g>
+
+  <!-- SECCIÓN IZQUIERDA: Tarjeta Holográfica del Centinela Avatar -->
+  <g transform="translate(240, 240)">
+    <!-- Marco de cristal con brillo cian -->
+    <rect width="360" height="480" rx="24" fill="#0b1324" fill-opacity="0.8" stroke="url(#c-cyan)" stroke-width="2" filter="url(#cartel-glow-cyan)" />
+    <!-- Esquinas reforzadas -->
+    <path d="M 0 40 V 0 H 40" stroke="#00f0ff" stroke-width="5" fill="none" />
+    <path d="M 320 0 H 360 V 40" stroke="#00f0ff" stroke-width="5" fill="none" />
+    <path d="M 0 440 V 480 H 40" stroke="#00f0ff" stroke-width="5" fill="none" />
+    <path d="M 320 480 H 360 V 440" stroke="#00f0ff" stroke-width="5" fill="none" />
+
+    <!-- Icono Centinela Centrado en la tarjeta -->
+    <g transform="translate(180, 210) scale(0.65)">
+      <!-- Armadura -->
+      <polygon points="-80,180 0,140 80,180 120,240 -120,240" fill="#1e293b" stroke="#38bdf8" stroke-width="3" />
+      <!-- Casco -->
+      <polygon points="-65,-70 0,-110 65,-70 90,10 0,40 -90,10" fill="#0f172a" stroke="#a855f7" stroke-width="3" />
+      <polygon points="-90,10 -60,110 0,150 -40,130 -80,60" fill="#1e293b" stroke="#00f0ff" stroke-width="2" />
+      <polygon points="90,10 60,110 0,150 40,130 80,60" fill="#1e293b" stroke="#00f0ff" stroke-width="2" />
+      <!-- Visor Neón -->
+      <polygon points="-75,15 0,30 75,15 65,45 0,60 -65,45" fill="#00f0ff" filter="url(#cartel-glow-cyan)" />
+      <!-- Ancla Pecho -->
+      <circle cx="0" cy="100" r="14" fill="none" stroke="#00f0ff" stroke-width="3.5" filter="url(#cartel-glow-cyan)" />
+      <line x1="0" y1="114" x2="0" y2="155" stroke="#00f0ff" stroke-width="4" />
+      <line x1="-20" y1="126" x2="20" y2="126" stroke="#a855f7" stroke-width="4" />
+      <path d="M -30 140 Q 0 170 30 140" fill="none" stroke="#00f0ff" stroke-width="4" />
+    </g>
+
+    <!-- Estado del agente en el avatar -->
+    <text x="180" y="410" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="14" fill="#00f0ff" letter-spacing="4" filter="url(#cartel-glow-cyan)">
+      ● STATUS: OPERATIONAL
+    </text>
+    <text x="180" y="435" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-size="12" fill="#94a3b8" letter-spacing="2">
+      CYCLE: 6 HOURS / DISPATCH
+    </text>
+  </g>
+
+  <!-- SECCIÓN DERECHA: Tipografía y Cartel Informativo -->
+  <g transform="translate(680, 240)">
+    <!-- Badge superior de orquestador -->
+    <g transform="translate(0, 30)">
+      <rect width="320" height="34" rx="6" fill="#1e1b4b" stroke="#a855f7" stroke-width="1.5" />
+      <text x="160" y="22" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="bold" fill="#c084fc" letter-spacing="3">
+        ◈ AGENTE AUTÓNOMO // FASE 07
+      </text>
+    </g>
+
+    <!-- Título Principal Impactante -->
+    <text x="0" y="150" font-family="'Segoe UI', 'Montserrat', 'Helvetica', sans-serif" font-size="82" font-weight="900" fill="url(#title-grad)" letter-spacing="8" filter="url(#cartel-glow-cyan)">
+      CENTINELA
+    </text>
+
+    <!-- Subtítulo -->
+    <text x="5" y="200" font-family="'JetBrains Mono', monospace" font-size="18" fill="#38bdf8" letter-spacing="5">
+      SISTEMA AUTÓNOMO DE SOPORTE Y TRIAGE DEL REPOSITORIO
+    </text>
+
+    <!-- Descripción técnica -->
+    <text x="5" y="245" font-family="'Segoe UI', sans-serif" font-size="16" fill="#94a3b8" width="800">
+      Agente centinela contextualizado en la arquitectura del portafolio oficial (TanStack Start, Vite, GitHub Pages).
+    </text>
+    <text x="5" y="270" font-family="'Segoe UI', sans-serif" font-size="16" fill="#94a3b8">
+      Monitorea GitHub Discussions, resuelve dudas técnicas, escala incidentes de seguridad y notifica en tiempo real.
+    </text>
+
+    <!-- Cuadrícula de Badges / Capacidades -->
+    <g transform="translate(0, 320)">
+      <!-- Badge 1: Discussions -->
+      <g transform="translate(0, 0)">
+        <rect width="260" height="50" rx="8" fill="#0f172a" stroke="#00f0ff" stroke-width="1.5" />
+        <circle cx="25" cy="25" r="5" fill="#00f0ff" filter="url(#cartel-glow-cyan)" />
+        <text x="45" y="23" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="bold" fill="#f8fafc">GITHUB DISCUSSIONS</text>
+        <text x="45" y="38" font-family="'Segoe UI', sans-serif" font-size="11" fill="#38bdf8">Atención cada 6 horas</text>
+      </g>
+
+      <!-- Badge 2: Soporte Bilingüe -->
+      <g transform="translate(280, 0)">
+        <rect width="260" height="50" rx="8" fill="#0f172a" stroke="#a855f7" stroke-width="1.5" />
+        <circle cx="25" cy="25" r="5" fill="#a855f7" filter="url(#cartel-glow-purple)" />
+        <text x="45" y="23" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="bold" fill="#f8fafc">SOPORTE BILINGÜE</text>
+        <text x="45" y="38" font-family="'Segoe UI', sans-serif" font-size="11" fill="#c084fc">Español &amp; English Nativo</text>
+      </g>
+
+      <!-- Badge 3: 3 Niveles Notificación -->
+      <g transform="translate(560, 0)">
+        <rect width="260" height="50" rx="8" fill="#0f172a" stroke="#00f0ff" stroke-width="1.5" />
+        <circle cx="25" cy="25" r="5" fill="#00f0ff" filter="url(#cartel-glow-cyan)" />
+        <text x="45" y="23" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="bold" fill="#f8fafc">TRIPLE ALERTA</text>
+        <text x="45" y="38" font-family="'Segoe UI', sans-serif" font-size="11" fill="#38bdf8">Push, Actions &amp; Discord</text>
+      </g>
+
+      <!-- Badge 4: Escalamiento -->
+      <g transform="translate(0, 65)">
+        <rect width="260" height="50" rx="8" fill="#0f172a" stroke="#ec4899" stroke-width="1.5" />
+        <circle cx="25" cy="25" r="5" fill="#ec4899" />
+        <text x="45" y="23" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="bold" fill="#f8fafc">SECURITY &amp; BUG TRIAGE</text>
+        <text x="45" y="38" font-family="'Segoe UI', sans-serif" font-size="11" fill="#f472b6">Apertura automática de Issue</text>
+      </g>
+
+      <!-- Badge 5: Validación Humana -->
+      <g transform="translate(280, 65)">
+        <rect width="260" height="50" rx="8" fill="#0f172a" stroke="#22c55e" stroke-width="1.5" />
+        <circle cx="25" cy="25" r="5" fill="#22c55e" />
+        <text x="45" y="23" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="bold" fill="#f8fafc">HUMAN-IN-THE-LOOP</text>
+        <text x="45" y="38" font-family="'Segoe UI', sans-serif" font-size="11" fill="#4ade80">Sin auto-answer (Revisión)</text>
+      </g>
+
+      <!-- Badge 6: Replicable -->
+      <g transform="translate(560, 65)">
+        <rect width="260" height="50" rx="8" fill="#0f172a" stroke="#eab308" stroke-width="1.5" />
+        <circle cx="25" cy="25" r="5" fill="#eab308" />
+        <text x="45" y="23" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="bold" fill="#f8fafc">ARQUITECTURA PORTABLE</text>
+        <text x="45" y="38" font-family="'Segoe UI', sans-serif" font-size="11" fill="#fde047">Dev Visualizer &amp; futuros</text>
+      </g>
+    </g>
+
+    <!-- Barra de Metadatos Inferior -->
+    <g transform="translate(0, 480)">
+      <line x1="0" y1="0" x2="820" y2="0" stroke="#334155" stroke-width="1" />
+      <text x="0" y="25" font-family="'JetBrains Mono', monospace" font-size="12" fill="#64748b">
+        MAINTAINER: <tspan fill="#38bdf8">@Luics415</tspan> | REPO: <tspan fill="#f8fafc">Luics415.github.io</tspan> | POWERED BY: <tspan fill="#a855f7">GEMINI AI</tspan>
+      </text>
+    </g>
+  </g>
+
+  <!-- Decoraciones de Esquinas de Pantalla HUD -->
+  <path d="M 40 80 V 40 H 80" stroke="#00f0ff" stroke-width="3" fill="none" opacity="0.6" />
+  <path d="M 1840 40 H 1880 V 80" stroke="#00f0ff" stroke-width="3" fill="none" opacity="0.6" />
+  <path d="M 40 1000 V 1040 H 80" stroke="#00f0ff" stroke-width="3" fill="none" opacity="0.6" />
+  <path d="M 1840 1040 H 1880 V 1000" stroke="#00f0ff" stroke-width="3" fill="none" opacity="0.6" />
+</svg>
