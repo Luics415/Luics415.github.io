@@ -194,26 +194,42 @@ def send_level_3_notifications(owner: str, repo: str, disc_number: int, title: s
     else:
         log("Telegram Webhook no configurado (TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID omitidos).")
 
-    # 2. Discord Webhook
-    discord_url = os.environ.get("DISCORD_WEBHOOK_URL", "").strip()
-    if discord_url:
+    # 2. Discord Direct Message (Bot DM)
+    discord_bot_token = os.environ.get('DISCORD_BOT_TOKEN', '').strip()
+    discord_user_id = os.environ.get('DISCORD_USER_ID', '').strip()
+    if discord_bot_token and discord_user_id:
         try:
-            discord_text = (
-                f"🤖 **[Agente Centinela - {repo}]**\n"
-                f"Se respondió a **@{author}** en la Discusión #{disc_number}: *{title}*\n"
-                f"🔗 **Validar en GitHub:** <{comment_url}>"
-            )
-            payload = json.dumps({"content": discord_text}).encode("utf-8")
-            req = urllib.request.Request(discord_url, data=payload, headers={"Content-Type": "application/json", "User-Agent": "CentinelaAgent/1.0"}, method="POST")
+            dm_channel_url = 'https://discord.com/api/v10/users/@me/channels'
+            dm_headers = {
+                'Authorization': f'Bot {discord_bot_token}',
+                'Content-Type': 'application/json',
+                'User-Agent': 'CentinelaAgent/1.0'
+            }
+            dm_payload = json.dumps({'recipient_id': discord_user_id}).encode('utf-8')
+            req = urllib.request.Request(dm_channel_url, data=dm_payload, headers=dm_headers, method='POST')
             with urllib.request.urlopen(req, timeout=10) as resp:
-                if resp.status in (200, 204):
-                    log("Notificación Nivel 3 (Discord) despachada con éxito.")
+                if resp.status in (200, 201):
+                    dm_data = json.loads(resp.read().decode('utf-8'))
+                    channel_id = dm_data.get('id')
+                    if channel_id:
+                        msg_url = f'https://discord.com/api/v10/channels/{channel_id}/messages'
+                        discord_text = (
+                            f'🤖 **[Agente Centinela - {repo}]**\n\n'
+                            f'Se atendió la duda de **@{author}** en la Discusión #{disc_number}:\n'
+                            f'*{title}*\n\n'
+                            f'🔗 **Validar en GitHub:** <{comment_url}>'
+                        )
+                        msg_payload = json.dumps({'content': discord_text}).encode('utf-8')
+                        req_msg = urllib.request.Request(msg_url, data=msg_payload, headers=dm_headers, method='POST')
+                        with urllib.request.urlopen(req_msg, timeout=10) as resp_msg:
+                            if resp_msg.status in (200, 201):
+                                log('Notificación Nivel 3 (Discord DM directo) despachada con éxito.')
         except Exception as e:
-            log(f"Aviso al enviar alerta a Discord: {e}")
+            log(f'Aviso al enviar DM a Discord: {e}')
     else:
-        log("Discord Webhook no configurado (DISCORD_WEBHOOK_URL omitido).")
+        log('Discord Bot DM no configurado (DISCORD_BOT_TOKEN o DISCORD_USER_ID omitidos).')
 
-
+    # 3. Discord Webhook (Canal alternativo)
 def write_step_summary(records: List[Dict[str, Any]]):
     """
     Nivel 2 de Notificación: Escribe una tabla ejecutiva en GitHub Actions Step Summary.
