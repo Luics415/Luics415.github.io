@@ -26,9 +26,9 @@ on:
     types: [created]
 
 permissions:
-  contents: read
+  contents: write
   discussions: write
-  issues: read
+  issues: write
   actions: read
 
 concurrency:
@@ -54,6 +54,9 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.LUICS_PAT || secrets.GITHUB_TOKEN }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
         shell: bash
         run: |
           set -euo pipefail
@@ -75,3 +78,11 @@ jobs:
 
           echo "Ejecutando Agente Centinela con flags: ${FLAGS[*]:-ninguna}"
           python .github/scripts/discussions_centinel.py "${FLAGS[@]}"
+
+      - name: Subir expediente histórico como artefacto
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: expediente-discusiones-${{ github.run_id }}
+          path: docs/FechaAgente/
+          if-no-files-found: ignore
