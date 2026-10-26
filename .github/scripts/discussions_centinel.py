@@ -143,6 +143,15 @@ def detect_security_or_bug_escalation(title: str, text: str) -> Optional[Tuple[s
     return None
 
 
+def is_bug_or_error_report(title: str, text: str) -> bool:
+    """Evalúa si la consulta describe un error, bug, fallo, rotura o mal funcionamiento."""
+    combined = (title + " " + text).lower()
+    patterns = [
+        r"\b(bug|bugs|error|errores|fallo|fallos|falla|fallas|fallando|crash|crashea|rompe|roto|broken|no funciona|pantalla blanca|white screen|overflow|unhandled|excepci[oó]n|exception|memory leak|freeze|freezea|congelado|se traba|se congela|500|404 persistente|fail|failure|failing)\b"
+    ]
+    return any(re.search(p, combined) for p in patterns)
+
+
 def escalate_issue_to_github(owner: str, repo: str, disc_number: int, title: str, author: str, comment_url: str, category: str, text: str, dry_run: bool = False) -> Optional[str]:
     """Crea un Issue interno asignado al propietario para atender el reporte escalado."""
     issue_title = f"[{category.upper()}] Escalamiento desde Discusión #{disc_number}: {title}"
@@ -808,8 +817,8 @@ def needs_response(discussion: Dict[str, Any], force: bool = False) -> Optional[
 # -----------------------------------------------------------------------------
 
 def call_gemini_api(prompt: str, api_key: str) -> Optional[str]:
-    """Invoca la API de Gemini utilizando modelos actualizados y encabezados oficiales con diagnóstico."""
-    models = ["gemini-3.8-flash", "gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"]
+    """Invoca la API de Gemini utilizando modelos actualizados y encabezados oficiales con diagnóstico y reintentos ante saturación."""
+    models = ["gemini-3.8-flash", "gemini-2.5-flash", "gemini-2.0-flash"]
     endpoints = [
         "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent",
         "https://generativelanguage.googleapis.com/v1/models/{model}:generateContent"
@@ -830,150 +839,309 @@ def call_gemini_api(prompt: str, api_key: str) -> Optional[str]:
                 "Content-Type": "application/json",
                 "x-goog-api-key": api_key
             }
-            req = urllib.request.Request(url, data=data, headers=headers)
-            try:
-                with urllib.request.urlopen(req, timeout=25) as resp:
-                    if resp.status == 200:
-                        res_body = json.loads(resp.read().decode("utf-8"))
-                        candidates = res_body.get("candidates", [])
-                        if candidates:
-                            text = candidates[0].get("content", {}).get("parts", [{}])[0].get("text", "")
-                            if text:
-                                log(f"Gemini API generó respuesta con éxito usando modelo {model}.")
-                                return text.strip()
-            except urllib.error.HTTPError as he:
-                error_body = ""
+            for attempt in range(2):
+                req = urllib.request.Request(url, data=data, headers=headers)
                 try:
-                    error_body = he.read().decode("utf-8")
-                except Exception:
-                    pass
-                log(f"Diagnóstico Gemini API ({model} - {he.code} {he.reason}): {error_body[:250]}")
-                continue
-            except Exception as e:
-                log(f"Aviso de conexión con modelo {model} en Gemini API: {e}")
-                continue
+                    with urllib.request.urlopen(req, timeout=20) as resp:
+                        if resp.status == 200:
+                            res_body = json.loads(resp.read().decode("utf-8"))
+                            candidates = res_body.get("candidates", [])
+                            if candidates:
+                                text = candidates[0].get("content", {}).get("parts", [{}])[0].get("text", "")
+                                if text:
+                                    log(f"Gemini API generó respuesta con éxito usando modelo {model}.")
+                                    return text.strip()
+                except urllib.error.HTTPError as he:
+                    error_body = ""
+                    try:
+                        error_body = he.read().decode("utf-8")
+                    except Exception:
+                        pass
+                    log(f"Diagnóstico Gemini API ({model} intento {attempt+1} - {he.code} {he.reason}): {error_body[:200]}")
+                    if he.code in [503, 429] and attempt == 0:
+                        time.sleep(2)
+                        continue
+                    break
+                except Exception as e:
+                    log(f"Aviso de conexión con modelo {model} en Gemini API: {e}")
+                    break
     return None
 
 
 # -----------------------------------------------------------------------------
-# SÍNTESIS CONTEXTUAL EN PROSA DENSA Y NATURAL
+# SÍNTESIS CONTEXTUAL EN PROSA DENSA Y NATURAL ESTRUCTURADA POR CATEGORÍA
 # -----------------------------------------------------------------------------
 
-def synthesize_project_response(discussion_title: str, query_text: str, author: str, context: Dict[str, Any], lang: str = "es", escalation: Optional[str] = None) -> str:
+def synthesize_project_response(discussion_title: str, query_text: str, author: str, context: Dict[str, Any], category: str = "General", lang: str = "es", escalation: Optional[str] = None) -> str:
     """
     Motor de síntesis contextual de alta fidelidad técnica para el Portafolio.
-    Cumple con el estándar de prosa densa, meticulosa y natural:
-    - Párrafos conectados y sustanciales (3 a 4 párrafos de alta densidad ingenieril).
-    - Minimiza listas a menos que sea imprescindible para contrastar elementos puntuales.
-    - Cero diagramas simplistas o artificiales.
-    - Profundidad técnica anclada en los proyectos y la arquitectura real de Luics415.github.io.
+    Estructurado específicamente por la categoría de GitHub Discussions y reportes de fallo:
+    - Ideas: Validación cálida de la propuesta, análisis de viabilidad técnica, plan atómico por fases y roadmap en GitHub Projects.
+    - Q&A: Respuestas técnicas directas, concisas y sin rodeos.
+    - General: Conversación arquitectónica y fundamentos de diseño con la comunidad.
+    - Announcements: Reconocimiento del hito, impacto para usuarios y referencias documentales.
+    - Polls: Evaluación técnica objetiva de las opciones y criterios para la votación.
+    - Show and tell: Celebración de la contribución, análisis de méritos técnicos y sugerencias de iteración.
+    - Reportes de Error/Fallo: Plan completo de resolución técnica en 4 pasos estructurados.
     """
     q_lower = (discussion_title + " " + query_text).lower()
+    norm_cat = category.strip().lower()
+    is_bug = is_bug_or_error_report(discussion_title, query_text) or (escalation and "bug" in escalation)
 
     if lang == "en":
-        # 1. Escalation response
-        if escalation:
+        # 1. Critical Security Escalation
+        if escalation and "security" in escalation:
             return f"""Hello @{author}! Thank you for bringing this situation to our attention.
 
 We have detected that this inquiry touches on a critical topic ({escalation}). We take repository security, runtime stability, and production reliability with the utmost seriousness. This incident has been immediately logged and escalated to @{OWNER_DEFAULT} through our internal issue tracking pipeline for prioritized technical inspection.
 
 In this portfolio repository, our CI/CD workflows run rigorous automated security audits including `gitleaks` and static verification checks across all pull requests before merge to prevent regressions or accidental credential exposure. To help us accelerate diagnostic review, please feel free to share any reproducible error logs, browser version details, or step-by-step reproduction scenarios directly in this thread. We will provide updates as soon as the maintainer conducts an initial review."""
 
-        # 2. Secrets Governance & Defense-in-Depth
+        # 2. Bug / Crash / Error Report -> Complete Step-by-Step Resolution Plan
+        if is_bug:
+            return f"""Hello @{author}! Thank you for reporting this issue. We take runtime stability, zero-regression builds, and mobile responsive layout integrity across the portfolio with absolute technical priority.
+
+### 🔍 Diagnostic & Probable Root Cause
+Based on the symptom described in *"{discussion_title}"*, the issue appears related to client-side layout constraints, hydration mismatch, or asset path resolution. Because this portfolio is pre-rendered as a static Single Page Application utilizing TanStack Start, React 19, Tailwind CSS v4, and Vite 8 deployed to GitHub Pages with `.nojekyll`, unexpected layout freezing or visual clipping typically stems from unconstrained utility classes causing horizontal overflows on narrow viewports (360px–430px) or missing DOM boundary checks during kinetic sprite drift.
+
+### 📁 Affected Modules & Repository Components
+- `portfolio-source/src/` (component layouts, interactive route views, and Tailwind CSS v4 token definitions).
+- Static pre-rendering output (`index.html`, compiled CSS/JS asset bundles in `dist/` or repository root).
+- Verification checklist scripts linked to `04-verificar.md` (zero horizontal scroll audits) and `05-revisar.md` (dependency health).
+
+### 🛠️ Step-by-Step Technical Resolution Plan
+1. **Reproduction & Local Emulation:** Launch the local development server (`cd portfolio-source && npm run dev`) and test responsive behavior across narrow mobile viewports (360px–430px), inspecting console errors and layout constraints.
+2. **Defensive Component Patch:** Apply atomic corrections in affected React 19 components and Tailwind CSS v4 utility classes, ensuring strict container clipping (`overflow-x: hidden`), semantic HTML structure, and defensive default props.
+3. **Automated Verification Pipeline:**
+   - Run local static compilation: `cd portfolio-source && npm run build` (confirming zero build warnings).
+   - Verify static asset synchronization to the repository root for GitHub Pages delivery.
+   - Execute mobile responsiveness checks to guarantee zero horizontal scrollbar leaks.
+   - Run dependency audits (`npm audit`) under `05-revisar.md`.
+4. **Git Workflow & Atomic PR:** Cut an atomic `fix/remediation-portfolio-discussion` branch, open a formal Pull Request with evidence, and merge cleanly into `main`.
+
+An internal tracking issue has been opened and assigned to @{OWNER_DEFAULT} to supervise this resolution plan. Please feel free to share any additional reproduction steps or console screenshots in this thread!"""
+
+        # 3. Category: Ideas
+        if norm_cat == "ideas":
+            return f"""Hello @{author}! Thank you very much for submitting this idea for Luis Rivera's official portfolio ([`Luics415.github.io`](https://github.com/Luics415/Luics415.github.io)).
+
+### 💡 Architectural Feasibility & Technical Fit
+Your proposal brings fresh creative value to the portfolio. Because the platform is built on modern frontend foundations—**TanStack Start**, **React 19**, **Vite 8**, and **Tailwind CSS v4** pre-rendered into static HTML/JS/CSS assets for GitHub Pages—new interactive components, showcase sections, or visual enhancements can be integrated modularly without introducing server-side runtime overhead.
+
+### 📋 3-Phase Implementation Plan
+1. **Phase 1: Specification & UX/UI Contracts (`01-definir` & `02-planificar`):**
+   - Define TypeScript type contracts, responsive layout breakpoints, and accessibility criteria in `portfolio-source/src/`.
+   - Ensure full alignment with our Arcane aesthetic palette and `prefers-reduced-motion` requirements.
+2. **Phase 2: Component Engineering (`03-construir`):**
+   - Implement the feature cleanly within isolated React 19 components and Tailwind CSS v4 utility tokens.
+   - Verify that client asset bundles remain optimized and free of extraneous third-party bloat.
+3. **Phase 3: Verification & Static Synchronization (`04-verificar` & `05-revisar`):**
+   - Execute `npm run build` and audit narrow mobile viewports (360px–430px) to guarantee zero horizontal scrollbar leaks.
+   - Synchronize static assets to repository root and verify that all pre-merge security checks (`gitleaks`, `npm audit`) pass.
+
+### 🚀 Roadmap & GitHub Projects Integration
+This proposal has been queued for our **GitHub Projects** roadmap. We will track its development under an atomic feature branch (`feat/`) following our standard Pull Request workflow. Thank you for contributing to the evolution of this portfolio!"""
+
+        # 4. Category: Announcements
+        if norm_cat == "announcements":
+            return f"""Hello @{author}! Thank you for following the official announcements and updates of this portfolio.
+
+Every major update, case study publication, or technical refactor is delivered through atomic pull requests verified against our automated quality gates (zero mobile horizontal scroll, WCAG 2.1 AA accessibility, and security scanning).
+
+You can review our full roadmap and commit history directly in [`README.md`](https://github.com/Luics415/Luics415.github.io/blob/main/README.md)."""
+
+        # 5. Category: Polls
+        if norm_cat == "polls":
+            return f"""Hello @{author}! Thank you for initiating this community poll.
+
+From an engineering perspective, evaluating frontend and systems architecture choices requires balancing static delivery constraints, mobile GPU rendering budgets, and long-term codebase maintainability.
+
+We encourage community members to cast their votes and share their technical rationale in the replies to help guide our upcoming architectural milestones!"""
+
+        # 6. Category: Show and tell
+        if norm_cat in ["show and tell", "show & tell"]:
+            return f"""Hello @{author}! Congratulations on sharing this project showcase with our community!
+
+It is great to see developers building creative engineering solutions and experimenting with modern web and systems technologies. Your project demonstrates solid technical thinking and clean execution.
+
+Feel free to check out our open-source implementations in [`README.md`](https://github.com/Luics415/Luics415.github.io/blob/main/README.md) for inspiration on WebGL voxel parsing, computer vision pipelines, or offline-first PWA caching strategies. Keep up the excellent work!"""
+
+        # 7. Specific Technical Inquiries (Secrets, Projects, Arcane / Visuals)
         if any(k in q_lower for k in ["secret", ".env", "gitleaks", "git-secrets", "vault", "doppler", "token", "leak", "security"]):
-            return f"""Hello @{author}! Thank you for reaching out with this question regarding secrets management and developer security practices.
+            return f"""Hello @{author}! In [`Luics415.github.io`](https://github.com/Luics415/Luics415.github.io), our defense-in-depth security model is shaped by the fact that this portfolio is a client-side Single Page Application generated with TanStack Start, React 19, Tailwind CSS v4, and Vite, deployed directly to GitHub Pages. Because there is no persistent Node.js or Python runtime server executing in production, no private API keys, master credentials, or production database connection strings ever belong inside client-side bundles or repository files.
 
-When designing the defense-in-depth architecture for [`Luics415.github.io`](https://github.com/Luics415/Luics415.github.io), our primary architectural boundary stems from the fact that this portfolio is a client-side Single Page Application generated with TanStack Start, React 19, Tailwind CSS v4, and Vite, compiled into static HTML/JS/CSS assets and hosted directly on GitHub Pages. Because there is no persistent Node.js or Python runtime server executing behind a reverse proxy in production, no private API keys, master credentials, or production database connection strings ever belong inside client-side bundles or repository files. In this context, tools like `.env` exist exclusively on the developer's local workstation for non-sensitive local parameters like local development ports, and are strictly ignored via `.gitignore` to prevent accidental staging.
+Tools like `.env` exist exclusively on the developer's local workstation for non-sensitive local parameters (such as local port bindings) and are strictly ignored via `.gitignore` to prevent accidental staging. In CI/CD, `gitleaks` acts as our mandatory automated quality gate in GitHub Actions, scanning commit diffs and full commit histories against high-entropy patterns and known token signatures before any Pull Request can merge into `main`.
 
-To establish comprehensive defense-in-depth, the industry differentiates between client-side interceptors like `git-secrets`, static continuous integration auditors like `gitleaks`, and centralized cloud key management services (KMS) like HashiCorp Vault or Doppler. While `git-secrets` acts as an early pre-commit hook scanning local staging areas for regular expression patterns, `gitleaks` serves as our mandatory automated quality gate in GitHub Actions. Operating as a fast Go binary, `gitleaks` audits commit diffs and full commit histories against high-entropy patterns and known token signatures before any Pull Request can be merged into `main`. Heavyweight solutions like Vault or Doppler—which manage dynamic cryptographic secret rotation and fine-grained access control lists every fifteen minutes—are indispensable for distributed enterprise microservices, but introduce unnecessary architectural complexity and operational cost for a static public web portfolio.
+All automation credentials (such as `GH_TOKEN`, `GEMINI_API_KEY`, and notification tokens) reside exclusively in encrypted **GitHub Secrets**, injected as ephemeral environment variables only during isolated runner workflows and scrubbed from logs automatically. Review skill `05-revisar.md` guarantees that no secret exposures or vulnerable package dependencies ever reach the published site."""
 
-Consequently, for our deployment and autonomous agents pipeline, all sensitive automation credentials (such as `GH_TOKEN`, `GEMINI_API_KEY`, and notification tokens) reside exclusively in encrypted **GitHub Secrets**. These secrets are injected as ephemeral environment variables only during isolated GitHub Actions workflow executions and are scrubbed from runner logs automatically. Before merging any change, our master orchestrator enforces the review skill (`05-revisar.md`), guaranteeing that no secret exposures or vulnerable package dependencies ever reach the published site."""
-
-        # 3. Flagship Projects Architecture
         if any(k in q_lower for k in ["project", "qr voxel", "aussiecare", "bio-gesture", "kasa", "tlalne", "showcase", "flagship"]):
-            return f"""Hello @{author}! Thank you for your inquiry about the technical architecture and flagship projects showcased in this portfolio.
+            return f"""Hello @{author}! The portfolio is structured around six flagship projects specifically selected to demonstrate rigorous software engineering across distinct computing domains:
 
-The portfolio is structured around six flagship projects specifically selected to demonstrate rigorous software engineering across distinct computing domains, rather than superficial UI clones. For instance, **QR Voxel Studio** pairs client-side QR matrix parsing with WebGL/Three.js voxel mesh generation, encoding full custom scenes into compact URL hashes without requiring database persistence. In parallel, **AussieCare** serves as an offline-first educational Progressive Web Application (PWA) built with advanced Service Worker caching strategies to provide seamless cinematic narratives and uninterrupted offline usability on mobile devices.
+**QR Voxel Studio** pairs client-side QR matrix parsing with WebGL/Three.js voxel mesh generation, encoding full custom scenes into compact URL hashes without database persistence. **AussieCare** is an offline-first educational Progressive Web Application (PWA) built with advanced Service Worker caching strategies. **Bio-Gesture Control Android** combines Google MediaPipe computer vision with real-time 3D coordinate transformations mapped into Android's Accessibility Service. **KASA Service Tracker** leverages .NET 8 with transactional JSON document persistence and high-fidelity XLSX reporting, while **Tlalne-Priority** implements modern C++20 algorithms utilizing custom priority queues (`std::priority_queue`) and folio indexing for high-throughput CSV persistence.
 
-On the native and systems engineering side, **Bio-Gesture Control Android** combines Google MediaPipe computer vision with real-time 3D coordinate transformations mapped into Android's Accessibility Service, enabling full hands-free device navigation without rooting or external hardware. For enterprise operational needs, **KASA Service Tracker** leverages .NET 8 with transactional JSON document persistence and high-fidelity XLSX reporting for audit compliance, while **Tlalne-Priority** implements modern C++20 algorithms utilizing custom priority queues (`std::priority_queue`) and folio indexing to achieve sub-millisecond dispatching and high-throughput CSV persistence.
+Every project featured in [`README.md`](https://github.com/Luics415/Luics415.github.io/blob/main/README.md) adheres to our strict Evidence Policy: technical sheets explicitly differentiate between real verified repository captures, immutable commit permalinks, and conceptual reconstructions."""
 
-Every project featured in [`README.md`](https://github.com/Luics415/Luics415.github.io/blob/main/README.md) adheres to our strict Evidence Policy: technical sheets explicitly differentiate between real verified repository captures, immutable commit permalinks, and conceptual reconstructions, providing complete transparency into the origin, compromises, and architecture of each solution."""
-
-        # 4. Frontend & Visual Identity Architecture
         if any(k in q_lower for k in ["arcane", "jinx", "graffiti", "sprite", "tanstack", "tailwind", "vite", "motion", "style", "design", "css"]):
-            return f"""Hello @{author}! Thank you for asking about the visual direction and frontend engineering of the portfolio.
+            return f"""Hello @{author}! The aesthetic identity of the portfolio draws inspiration from the universe of Arcane, balancing a palette of deep navy blues, luminous cyans, vivid pinks, and magenta accents anchored by our signature anchor monogram featuring the letter 'L'.
 
-The aesthetic identity of the portfolio draws inspiration from the universe of Arcane, balancing a palette of deep navy blues, luminous cyans, vivid pinks, and magenta accents anchored by our signature anchor monogram featuring the letter 'L'. Rather than utilizing generic stock illustrations or unoptimized assets, the background system features 22 transparent sprites meticulously extracted from authentic Jinx graffiti cutouts. Our asset preparation pipeline reconstructed the alpha channel directly while preserving original RGB color values, avoiding artificial recoloring or quality loss. These sprites are distributed gracefully across desktop viewports, with dynamic responsiveness scaling down to 18 sprites on tablets and 10 on mobile displays to conserve GPU fill rate.
+Rather than utilizing generic stock illustrations, the background system features 22 transparent sprites meticulously extracted from authentic Jinx graffiti cutouts. Our asset preparation pipeline reconstructed the alpha channel directly while preserving original RGB color values. These sprites scale dynamically from 22 on desktop down to 18 on tablets and 10 on mobile displays to conserve GPU fill rate.
 
-From an engineering perspective, the application is built on **TanStack Start**, **React 19**, **Vite 8**, and **Tailwind CSS v4**. Static Site Generation (SSG) pre-renders all project sheets and the technical study case at build time, emitting optimized static HTML files that deploy seamlessly to GitHub Pages via `.nojekyll` and hashed asset caching. Accessibility is a fundamental pillar: we strictly respect the `prefers-reduced-motion` media query, instantly freezing kinetic drift while preserving visual contrast and layout hierarchy.
+The application is built on **TanStack Start**, **React 19**, **Vite 8**, and **Tailwind CSS v4** with Static Site Generation (SSG). We strictly respect `prefers-reduced-motion` to instantly freeze kinetic drift, and our automated orchestrator enforces zero horizontal scrollbar leaks across narrow mobile viewports (360px–430px) under `04-verificar.md`."""
 
-Furthermore, our autonomous orchestrator enforces rigorous mobile responsive audits (`04-verificar.md`) to guarantee zero horizontal scrollbar leaks across narrow viewports (360px–430px) and full WCAG 2.1 AA keyboard focus management across interactive elements."""
+        # 8. General Open Discussion
+        if norm_cat == "general":
+            return f"""Hello @{author}! Welcome to the general discussions forum for Luis Rivera's official portfolio.
 
-        # 5. Default General Response
-        return f"""Hello @{author}! Thank you for reaching out regarding Luis Rivera's official portfolio ([`Luics415.github.io`](https://github.com/Luics415/Luics415.github.io)).
+This project was built to demonstrate how modern static web engineering (TanStack Start, React 19, Tailwind CSS v4, Vite 8) can deliver high-performance, accessible, and visually compelling experiences without relying on persistent server infrastructure. We take pride in maintaining strict evidence-backed case studies and an automated 7-skill governance model.
 
-This portfolio operates as a fully static web application pre-rendered using **TanStack Start**, **React 19**, **Vite 8**, and **Tailwind CSS v4**, deployed continuously to GitHub Pages through automated GitHub Actions workflows. It showcases six flagship engineering projects spanning computer vision (Bio-Gesture Control Android), systems programming (Tlalne-Priority in C++20), WebGL voxel processing (QR Voxel Studio), offline PWAs (AussieCare), and desktop architectures (.NET 8 KASA Service Tracker), alongside Dev Visualizer and educational tools.
+We welcome discussions on architecture, frontend performance, computer vision, and systems engineering. What topics or design decisions would you like to explore together?"""
 
-Our repository governance adheres to an atomic orchestrator model across six phases (`01-definir` through `06-aprobar`) with full commit traceability and automated security audits. For detailed architectural documentation, feel free to inspect [`README.md`](https://github.com/Luics415/Luics415.github.io/blob/main/README.md) and [`AGENTS.md`](https://github.com/Luics415/Luics415.github.io/blob/main/AGENTS.md)."""
+        # Default Q&A English
+        return f"""Hello @{author}! This portfolio operates as a fully static web application pre-rendered using **TanStack Start**, **React 19**, **Vite 8**, and **Tailwind CSS v4**, deployed continuously to GitHub Pages through automated GitHub Actions workflows.
 
-    # Idioma Español
-    if escalation:
+It showcases six flagship engineering projects spanning computer vision (Bio-Gesture Control Android), systems programming (Tlalne-Priority in C++20), WebGL voxel processing (QR Voxel Studio), offline PWAs (AussieCare), and desktop architectures (.NET 8 KASA Service Tracker), alongside Dev Visualizer and educational tools. Feel free to inspect [`README.md`](https://github.com/Luics415/Luics415.github.io/blob/main/README.md) and [`AGENTS.md`](https://github.com/Luics415/Luics415.github.io/blob/main/AGENTS.md)."""
+
+        # Fallback English
+        return f"""Hello @{author}! Thank you for participating in Luis Rivera's portfolio discussions.
+
+This portfolio operates as a fully static web application pre-rendered using **TanStack Start**, **React 19**, **Vite 8**, and **Tailwind CSS v4**, deployed to GitHub Pages. For detailed technical documentation, please review [`README.md`](https://github.com/Luics415/Luics415.github.io/blob/main/README.md)."""
+
+    # =========================================================================
+    # ESPAÑOL
+    # =========================================================================
+
+    # 1. Escalamiento de Seguridad Crítica
+    if escalation and "security" in escalation:
         return f"""¡Hola @{author}! Gracias por reportar esta situación con prontitud.
 
 Hemos detectado que esta consulta refiere a un tema clasificado como crítico ({escalation}). En este proyecto nos tomamos la seguridad del repositorio, la estabilidad en runtime y la integridad de los flujos de entrega con la máxima seriedad técnica. Por ello, el incidente ha sido registrado y escalado inmediatamente a @{OWNER_DEFAULT} mediante nuestro sistema interno de seguimiento de issues para su inspección prioritaria.
 
 En este portafolio, nuestros flujos de CI/CD ejecutan auditorías automáticas de seguridad mediante `gitleaks` y análisis estático de dependencias en cada Pull Request antes de su integración a `main`. Para ayudarnos a acelerar el diagnóstico, no dudes en compartir registros de consola, versiones de navegador o pasos reproducibles directamente en este hilo. Te mantendremos informado en cuanto se realice la revisión inicial."""
 
+    # 2. Reporte de Error / Fallo / Bug -> Plan Completo de Resolución Técnica
+    if is_bug:
+        return f"""¡Hola @{author}! Gracias por reportar este comportamiento anómalo. En este portafolio nos tomamos la estabilidad en runtime, la responsividad móvil sin desbordamientos y la ausencia total de regresiones con la más rigurosa prioridad técnica.
+
+### 🔍 Diagnóstico Preliminar y Causa Raíz Probable
+Analizando el síntoma expuesto en *"{discussion_title}"*, la anomalía apunta a una desincronización de constraints de layout, hidratación de componentes o resolución de assets estáticos. Al generarse el portafolio como una Single Page Application estática sobre TanStack Start, React 19, Tailwind CSS v4 y Vite 8 servida en GitHub Pages con `.nojekyll`, los bloqueos visuales o desbordamientos suelen originarse por clases de utilidad no acotadas en pantallas móviles estrechas (360px–430px) o desincronización durante la animación cinética de sprites sobre la GPU.
+
+### 📁 Módulos y Archivos Afectados en el Repositorio
+- `portfolio-source/src/` (componentes visuales, rutas prerenderizadas, layout general y tokens de diseño de Tailwind CSS v4).
+- Raíz del repositorio y distribución estática compilada (`index.html`, bundles optimizados en `dist/` sincronizados a raíz).
+- Protocolos de calidad en `.github/skills/04-verificar.md` (auditoría de cero scroll horizontal) y `05-revisar.md` (salud de dependencias).
+
+### 🛠️ Plan de Solución Técnica Paso a Paso
+1. **Reproducción y Aislamiento Local:** Levantar el entorno de desarrollo local (`cd portfolio-source && npm run dev`) y emular dispositivos móviles de 360px a 430px de ancho, inspeccionando desbordamientos con `document.documentElement.scrollWidth > window.innerWidth` y capturando advertencias en la consola del navegador.
+2. **Parche Atómico de Código:** Corregir las clases y estructuras en los componentes React 19 afectados, asegurando contención de cajas (`overflow-x: hidden`), accesibilidad semántica y valores defensivos por defecto en props.
+3. **Verificación Automatizada del Pipeline:**
+   - Compilación estática: `cd portfolio-source && npm run build` (confirmando cero advertencias y generación correcta de HTML/JS).
+   - Sincronización estática de assets hacia la raíz del repositorio para GitHub Pages.
+   - Auditoría móvil: certificar cero scroll horizontal en pantallas de 360px–430px.
+   - Auditoría de dependencias (`npm audit`) y verificación de cero secretos expuestos (`gitleaks`).
+4. **Flujo Git y Pull Request Atómico:** Crear rama `fix/remediacion-fallo-portafolio`, emitir Pull Request formal con evidencias antes/después y fusionar a `main`.
+
+Se ha registrado un issue interno asignado a @{OWNER_DEFAULT} para auditar la remediación completa de este caso. Si posees capturas de pantalla o detalles del dispositivo, compártelos en este hilo."""
+
+    # 3. Categoría: Ideas (Propuestas de nuevas características o mejoras)
+    if norm_cat == "ideas":
+        return f"""¡Hola @{author}! Muchas gracias por compartir esta propuesta para el portafolio oficial de Luis Rivera ([`Luics415.github.io`](https://github.com/Luics415/Luics415.github.io)).
+
+### 💡 Viabilidad Técnica y Acoplamiento Arquitectónico
+Tu iniciativa aporta un valor significativo a la experiencia del portafolio. Dado que el proyecto está estructurado con una arquitectura moderna de frontend—**TanStack Start**, **React 19**, **Vite 8** y **Tailwind CSS v4** prerenderizada como sitio estático (SSG) para GitHub Pages—, la integración de nuevos módulos interactivos, mejoras de interfaz o extensiones de casos de estudio puede implementarse de manera modular y ligera, preservando tiempos de carga inmediatos y cero costes de servidor.
+
+### 📋 Plan Atómico de Implementación por Fases
+1. **Fase 1: Especificación y Contratos de UI/UX (`01-definir` y `02-planificar`):**
+   - Definir los contratos de tipos en TypeScript, la interacción visual y los puntos de ruptura responsivos en `portfolio-source/src/`.
+   - Garantizar total coherencia con la identidad Arcane (paleta de colores y monograma) y la directiva `prefers-reduced-motion`.
+2. **Fase 2: Construcción de Componentes (`03-construir`):**
+   - Desarrollar la lógica en componentes desacoplados de React 19 con utilidades atómicas de Tailwind CSS v4.
+   - Asegurar que el bundle de cliente no incorpore librerías externas innecesarias ni incremente el peso del script principal.
+3. **Fase 3: Verificación y Sincronización Estática (`04-verificar` y `05-revisar`):**
+   - Ejecutar `cd portfolio-source && npm run build` y sincronizar los archivos estáticos hacia la raíz.
+   - Auditar en navegadores móviles (360px–430px) la ausencia total de desbordamiento horizontal y certificar cumplimiento WCAG 2.1 AA.
+   - Validar con `gitleaks` y `npm audit` que no existan riesgos de seguridad.
+
+### 🚀 Integración en GitHub Projects y Roadmap
+Esta propuesta ha quedado indexada para incorporarse al tablero de **GitHub Projects** del portafolio. Se implementará a través de una rama atómica `feat/` bajo el flujo formal de Pull Request. ¡Agradecemos enormemente tu participación para seguir elevando la calidad técnica de este proyecto!"""
+
+    # 4. Categoría: Announcements
+    if norm_cat == "announcements":
+        return f"""¡Hola @{author}! Gracias por seguir los comunicados y actualizaciones oficiales de este repositorio.
+
+Cada hito y avance presentado en el portafolio se gestiona a través de nuestro pipeline de calidad estructurado en seis fases (`01-definir` a `06-aprobar`), garantizando trazabilidad completa de commits, compuertas de seguridad automáticas y cero desbordamientos en dispositivos móviles.
+
+Puedes consultar el historial de entregas y el roadmap técnico en [`README.md`](https://github.com/Luics415/Luics415.github.io/blob/main/README.md)."""
+
+    # 5. Categoría: Polls
+    if norm_cat == "polls":
+        return f"""¡Hola @{author}! Gracias por organizar esta votación con la comunidad.
+
+Desde el punto de vista ingenieril, sopesar decisiones técnicas demanda evaluar el equilibrio entre velocidad de entrega, rendimiento en GPU de dispositivos móviles, fidelidad estética y mantenibilidad a largo plazo bajo un modelo de despliegue estático.
+
+Alentamos a todos los participantes a emitir su voto y exponer los fundamentos técnicos de su postura en los comentarios para enriquecer las futuras decisiones del proyecto."""
+
+    # 6. Categoría: Show and tell
+    if norm_cat in ["show and tell", "show & tell"]:
+        return f"""¡Hola @{author}! ¡Enhorabuena por compartir esta demostración técnica con la comunidad!
+
+Es sumamente estimulante observar cómo se conciben proyectos innovadores que articulan creatividad con rigor de software. Tu implementación refleja dedicación, buen criterio de arquitectura y cuidado en la experiencia visual.
+
+Te invitamos a explorar las implementaciones documentadas en [`README.md`](https://github.com/Luics415/Luics415.github.io/blob/main/README.md) como inspiración complementaria en gráficos WebGL, visión artificial y PWAs offline-first. ¡Excelente trabajo!"""
+
+    # 7. Consultas Técnicas Específicas (Secretos, Proyectos, Identidad Arcane)
     if any(k in q_lower for k in ["secreto", ".env", "gitleaks", "git-secrets", "vault", "doppler", "token", "fuga", "seguridad"]):
-        return f"""¡Hola @{author}! Con gusto profundizamos en la comparativa técnica entre estas herramientas y cómo se aplican en la arquitectura real de este portafolio:
+        return f"""¡Hola @{author}! En [`Luics415.github.io`](https://github.com/Luics415/Luics415.github.io), la estrategia de defensa en profundidad (*Defense-in-Depth*) parte de que el sitio es una Single Page Application estática compilada con TanStack Start, React 19, Tailwind CSS v4 y Vite, servida directamente en GitHub Pages. Al no existir un backend persistente en Node.js o Python en producción, ninguna clave privada de base de datos ni token sensible debe compilarse jamás en el bundle de cliente.
 
-Al diseñar la estrategia de defensa en profundidad (*Defense-in-Depth*) para [`Luics415.github.io`](https://github.com/Luics415/Luics415.github.io), el principio delimitador fundamental es que el portafolio es una Single Page Application estática compilada con TanStack Start, React 19, Tailwind CSS v4 y Vite, alojada directamente en GitHub Pages. Al no existir un backend persistente en Node.js o Python ejecutándose en un servidor de producción, ninguna clave privada de base de datos, credencial maestra ni token sensible debe compilarse jamás dentro del bundle de cliente. En este esquema, el archivo `.env` se restringe exclusivamente al entorno local de la estación de desarrollo para variables no sensibles (como puertos de desarrollo local), manteniéndose estrictamente excluido en `.gitignore` para evitar su rastreo en Git.
+El archivo `.env` se restringe al entorno local para variables no sensibles (como puertos de desarrollo local), excluyéndose estrictamente en `.gitignore`. En nuestros flujos de GitHub Actions, `gitleaks` opera como compuerta obligatoria en Go, analizando la entropía y más de 150 firmas de tokens en diffs y en el historial completo de commits antes de permitir cualquier merge a la rama principal.
 
-En las etapas intermedias del ciclo de vida del código es donde se diferencian herramientas como `git-secrets`, `gitleaks` y los gestores KMS en la nube. Mientras que `git-secrets` opera como un hook de cliente (`pre-commit`) que inspecciona los diffs locales antes de crear un commit mediante expresiones regulares, `gitleaks` actúa como una compuerta infranqueable en nuestros flujos de GitHub Actions. Implementado como un binario en Go de altísima velocidad, `gitleaks` analiza la entropía y más de 150 firmas de tokens en diffs y en el historial completo de commits antes de permitir cualquier merge a la rama principal. Por su parte, sistemas centralizados como HashiCorp Vault o Doppler —ideales para microservicios empresariales con rotación dinámica de claves cada 15 minutos— representan una sobrecarga de infraestructura innecesaria para un sitio web público estático.
-
-Por consiguiente, todas las credenciales de automatización (`GH_TOKEN`, `GEMINI_API_KEY` y webhooks) residen de forma segura y cifrada en **GitHub Secrets**, inyectándose como variables efímeras únicamente durante la ejecución de los runners de GitHub Actions. Antes de aprobar cualquier cambio, el orquestador ejecuta la habilidad de revisión (`05-revisar.md`), garantizando la ausencia total de credenciales expuestas en el código compilado."""
+Todas las credenciales de automatización (`GH_TOKEN`, `GEMINI_API_KEY` y webhooks) residen de forma segura en **GitHub Secrets**, inyectándose como variables efímeras solo durante la ejecución de los runners. La habilidad `05-revisar.md` audita que ninguna credencial quede expuesta en el código compilado."""
 
     if any(k in q_lower for k in ["proyecto", "qr voxel", "aussiecare", "bio-gesture", "kasa", "tlalne", "destacado"]):
-        return f"""¡Hola @{author}! Gracias por tu interés en los proyectos destacados y la arquitectura técnica de este portafolio.
+        return f"""¡Hola @{author}! El portafolio concentra seis proyectos insignia seleccionados para demostrar ingeniería de software rigurosa en múltiples disciplinas:
 
-El catálogo del sitio está estructurado alrededor de seis proyectos insignia seleccionados para demostrar ingeniería de software rigurosa en múltiples disciplinas. Por ejemplo, **QR Voxel Studio** combina el procesamiento local de matrices QR con el renderizado WebGL/Three.js de escenas voxel en 3D, permitiendo la codificación completa de escenas en enlaces compactos sin requerir persistencia en base de datos. En paralelo, **AussieCare** fue diseñado como una Progressive Web Application (PWA) cinematográfica y educativa con arquitectura offline-first, apoyada en Service Workers para garantizar disponibilidad continua incluso sin conexión a red.
+**QR Voxel Studio** combina procesamiento local de matrices QR con renderizado WebGL/Three.js de escenas voxel 3D sin base de datos. **AussieCare** es una Progressive Web Application (PWA) offline-first con Service Workers y caché avanzada. **Bio-Gesture Control Android** integra visión computacional de Google MediaPipe con transformación de coordenadas 3D al Servicio de Accesibilidad de Android para control gestual sin root. **KASA Service Tracker** aprovecha .NET 8 con persistencia transaccional en JSON y reportes XLSX, y **Tlalne-Priority** implementa algoritmos en C++20 con colas de prioridad (`std::priority_queue`) e indexación numérica por folio para despacho eficiente en CSV.
 
-En el área de bajo nivel y visión computacional, **Bio-Gesture Control Android** integra modelos de visión de Google MediaPipe para rastreo de manos con transformación de coordenadas 3D a 2D conectadas al Servicio de Accesibilidad de Android, posibilitando control gestual sin requerir permisos root ni periféricos externos. Para entornos empresariales, **KASA Service Tracker** aprovecha .NET 8 con persistencia transaccional en JSON y reportes XLSX para trazabilidad de servicio, mientras que **Tlalne-Priority** implementa algoritmos en C++20 con colas de prioridad (`std::priority_queue`) e indexación numérica por folio para despacho eficiente y almacenamiento por lotes en CSV.
-
-Todos los casos de estudio documentados en [`README.md`](https://github.com/Luics415/Luics415.github.io/blob/main/README.md) se rigen por una estricta Política de Evidencia Técnica, diferenciando de forma explícita capturas reales, enlaces inmutables a commits y reconstrucciones conceptuales para ofrecer máxima transparencia técnica."""
+Todos los casos documentados en [`README.md`](https://github.com/Luics415/Luics415.github.io/blob/main/README.md) siguen una estricta Política de Evidencia Técnica, diferenciando capturas reales, enlaces inmutables y reconstrucciones conceptuales."""
 
     if any(k in q_lower for k in ["arcane", "jinx", "grafiti", "sprite", "tanstack", "tailwind", "vite", "motion", "diseño", "css"]):
-        return f"""¡Hola @{author}! Con gusto compartimos los detalles sobre la identidad visual y la ingeniería frontend del portafolio.
+        return f"""¡Hola @{author}! La estética del portafolio se inspira en el universo de Arcane, articulando una paleta de azul profundo, cian, rosa y magenta con el monograma de ancla y la letra 'L' como elemento identitario central.
 
-La estética del sitio se inspira en el universo de Arcane, articulando una paleta que conjuga azul profundo, cian, rosa y magenta con el monograma de ancla y la letra 'L' como elemento identitario central. Para el fondo interactivo, en lugar de recurrir a ilustraciones genéricas o patrones pesados, se procesaron 22 sprites transparentes derivados de recortes icónicos de grafitis de Jinx. Nuestro pipeline de preparación preservó los valores cromáticos RGB originales reconstruyendo exclusivamente el canal alfa, evitando distorsiones cromáticas. Los sprites se distribuyen dinámicamente con opacidades moderadas y trayectorias suaves, adaptándose de 22 en escritorio a 18 en tabletas y 10 en dispositivos móviles para optimizar la tasa de renderizado en GPU.
+Para el fondo interactivo, procesamos 22 sprites transparentes derivados de recortes icónicos de grafitis de Jinx, preservando los valores cromáticos RGB originales y reconstruyendo exclusivamente el canal alfa. Los sprites se distribuyen dinámicamente con opacidades suaves, escalando de 22 en escritorio a 18 en tabletas y 10 en móviles para optimizar la tasa de renderizado en GPU.
 
-A nivel de arquitectura web, el proyecto está edificado sobre **TanStack Start**, **React 19**, **Vite 8** y **Tailwind CSS v4**. La generación estática (SSG) prerenderiza las dieciséis fichas técnicas y el caso de estudio técnico durante el build, generando archivos HTML optimizados listos para su distribución global a través de GitHub Pages con `.nojekyll` y versionado de assets mediante hashes.
+El sitio está construido sobre **TanStack Start**, **React 19**, **Vite 8** y **Tailwind CSS v4** con Static Site Generation (SSG). Respetamos estrictamente `prefers-reduced-motion` para suspender traslaciones continuas, y auditamos mediante `04-verificar.md` que la interfaz mantenga cero desbordamiento horizontal en pantallas estrechas (360px–430px)."""
 
-La accesibilidad y el rendimiento son imperativos: respetamos estrictamente la directiva `prefers-reduced-motion` para suspender traslaciones continuas en favor de usuarios con sensibilidad vestibular, y auditamos mediante la habilidad `04-verificar.md` que la interfaz mantenga cero desbordamiento horizontal en pantallas estrechas (360px–430px) y total soporte de navegación por teclado."""
+    # 8. Conversación General
+    if norm_cat == "general":
+        return f"""¡Hola @{author}! Te damos la bienvenida a las discusiones generales del portafolio de Luis Rivera.
 
-    return f"""¡Hola @{author}! Gracias por tu consulta sobre el portafolio oficial de Luis Rivera ([`Luics415.github.io`](https://github.com/Luics415/Luics415.github.io)).
+Este espacio está concebido para dialogar abiertamente sobre arquitectura de software, ingeniería frontend de alto rendimiento y metodologías de gobernanza asistida por agentes autónomos. La elección de TanStack Start, React 19, Tailwind CSS v4 y Vite 8 responde a la meta de ofrecer una aplicación web estática ultrarrápida, resiliente y accesible.
 
-Este sitio web opera como una aplicación estática prerenderizada mediante **TanStack Start**, **React 19**, **Vite 8** y **Tailwind CSS v4**, desplegada automáticamente hacia GitHub Pages a través de GitHub Actions. Su objetivo principal es concentrar proyectos de alto rigor técnico que abarcan visión computacional (Bio-Gesture Control Android), sistemas y algoritmos en C++20 (Tlalne-Priority), WebGL 3D (QR Voxel Studio), PWAs offline-first (AussieCare) y desarrollo en .NET 8 (KASA Service Tracker), además del atlas interactivo Dev Visualizer.
+Nos encanta intercambiar perspectivas sobre trade-offs técnicos, patrones de diseño y optimizaciones de rendimiento. ¿Qué temas o tecnologías te gustaría que analicemos en conjunto?"""
 
-El repositorio sigue un modelo de orquestación atómica estructurado en seis fases (`01-definir` a `06-aprobar`) con trazabilidad completa de commits y auditorías pre-merge. Para revisar a fondo la arquitectura y las decisiones de diseño, puedes consultar [`README.md`](https://github.com/Luics415/Luics415.github.io/blob/main/README.md) y [`AGENTS.md`](https://github.com/Luics415/Luics415.github.io/blob/main/AGENTS.md)."""
+    # Fallback por defecto en Español (Q&A)
+    return f"""¡Hola @{author}! Este portafolio opera como una aplicación estática prerenderizada mediante **TanStack Start**, **React 19**, **Vite 8** y **Tailwind CSS v4**, desplegada automáticamente hacia GitHub Pages a través de GitHub Actions.
+
+Su propósito es concentrar proyectos de alto rigor técnico que abarcan visión computacional (Bio-Gesture Control Android), algoritmos en C++20 (Tlalne-Priority), WebGL 3D (QR Voxel Studio), PWAs offline-first (AussieCare) y desarrollo en .NET 8 (KASA Service Tracker), además del atlas interactivo Dev Visualizer. Puedes consultar más detalles en [`README.md`](https://github.com/Luics415/Luics415.github.io/blob/main/README.md) y [`AGENTS.md`](https://github.com/Luics415/Luics415.github.io/blob/main/AGENTS.md)."""
 
 
 def generate_response(discussion: Dict[str, Any], target_comment: Dict[str, Any], context: Dict[str, Any], lang: str, escalation: Optional[str] = None) -> str:
-    """Genera la respuesta adaptada mediante LLM (Gemini 3.8 Flash) o motor contextual bilingüe."""
+    """Genera la respuesta adaptada mediante LLM (Gemini 3.8 Flash) o motor contextual bilingüe estructurado por categoría."""
     title = discussion.get("title", "")
+    category = (discussion.get("category") or {}).get("name", "General")
     author = target_comment.get("author", {}).get("login", "") or discussion.get("author", {}).get("login", "")
     query_text = target_comment.get("body", "")
+    is_bug = is_bug_or_error_report(title, query_text) or (escalation and "bug" in escalation)
 
     gemini_key = os.environ.get("GEMINI_API_KEY", "").strip()
-    if gemini_key:
-        log(f"GEMINI_API_KEY detectada. Generando respuesta contextual mediante LLM en idioma: {lang.upper()}...")
+    if gemini_key and not (escalation and "security" in escalation):
+        log(f"GEMINI_API_KEY detectada. Generando respuesta contextual mediante LLM en idioma: {lang.upper()} (Categoría: {category})...")
         target_lang_desc = "English" if lang == "en" else "Spanish"
         system_prompt = f"""You are the Autonomous Sentinel Agent for Luis Rivera's (@{OWNER_DEFAULT}) portfolio repository (Luics415/Luics415.github.io).
-Respond strictly in {target_lang_desc} with a pedagogical, professional, natural, and technical tone.
+Respond strictly in {target_lang_desc} with a pedagogical, professional, natural, empathetic, and technical tone.
 
 CRITICAL EDITORIAL GUIDELINES:
 1. Write in 3 to 4 dense, well-connected, articulate technical paragraphs.
-2. Minimize bullet lists; do NOT use bullet lists unless strictly contrasting distinct tools.
+2. Minimize bullet lists; use bullet lists only for small checklists or phases.
 3. Absolutely NO ASCII diagrams or simplistic flowcharts.
 4. Ground your answer meticulously in this repository:
    - Architecture: {context.get('arquitectura')}
@@ -982,20 +1150,38 @@ CRITICAL EDITORIAL GUIDELINES:
    - Featured Projects: {', '.join(context.get('proyectos_destacados', []))}
    - Visual Identity: {context.get('identidad_visual')}
 
-User inquiry (@{author}):
-Title: {title}
-Body: {query_text}
+INSTRUCTIONS SPECIFIC TO DISCUSSION CATEGORY: '{category.upper()}':
+- If Category is 'IDEAS':
+  * Enthusiastically validate and acknowledge the proposal submitted by @{author}.
+  * Evaluate technical feasibility against TanStack Start, React 19, Tailwind CSS v4, Vite 8, SSG, and GitHub Pages.
+  * Structure a 3-Phase Implementation Plan (Phase 1: Specification & UX contracts, Phase 2: Component engineering in portfolio-source/src/, Phase 3: Zero mobile horizontal scroll 360px-430px audit and static sync).
+  * Propose tracking on GitHub Projects roadmap via atomic feat/ branch.
+- If Category is 'Q&A':
+  * Provide a direct, concise technical answer in the first paragraph.
+  * Reference exact architecture details and files. Avoid unrelated promotion.
+- If Category is 'GENERAL':
+  * Senior conversational engineering tone, discussing architectural philosophies, trade-offs, and design rationale.
+- If Category is 'ANNOUNCEMENTS':
+  * Celebrate the milestone, summarize user benefits, and point to docs.
+- If Category is 'POLLS':
+  * Provide objective technical criteria and trade-offs to help the community vote informedly.
+- If Category is 'SHOW AND TELL':
+  * Warmly celebrate the community contribution, analyze engineering merits, and suggest constructive evolutions.
 
-Requirements:
-- Directly resolve the question with technical depth.
-- If an escalation ({escalation}) is present, acknowledge it clearly and professionally.
+CRITICAL RULE FOR BUG / ERROR / CRASH REPORTS (Active: {is_bug}):
+If this inquiry reports any bug, crash, freeze, error, or broken component, you MUST structure a COMPLETE 4-STEP RESOLUTION PLAN:
+1. Diagnóstico y Causa Raíz Probable: Technical breakdown of the root cause.
+2. Módulos y Archivos Afectados en el Repositorio: Specific components involved in portfolio-source/src/ and static root.
+3. Plan de Solución Técnica Paso a Paso (Reproduction with npm run dev, Defensive component patch, Verification with npm run build and 0 mobile horizontal scroll check).
+4. Criterios de Verificación y Mitigación: Reproducible validation gates (04-verificar.md, 05-revisar.md).
+5. Trazabilidad y Asignación de Issue interno a @{OWNER_DEFAULT}.
 """
         generated = call_gemini_api(system_prompt, gemini_key)
         if generated:
             return generated
 
-    log(f"Generando respuesta utilizando el motor contextual integrado ({lang.upper()})...")
-    return synthesize_project_response(title, query_text, author, context, lang=lang, escalation=escalation)
+    log(f"Generando respuesta utilizando el motor contextual integrado ({lang.upper()}, Categoría: {category})...")
+    return synthesize_project_response(title, query_text, author, context, category=category, lang=lang, escalation=escalation)
 
 
 def post_reply(discussion_id: str, body: str, reply_to_id: Optional[str] = None, dry_run: bool = False) -> Optional[str]:
