@@ -24,4 +24,4 @@ Para ejecutar cualquier tarea dentro del ecosistema del portafolio, consulta exc
 - `04-verificar.md`: Checklist reproducible de calidad: `npm run build`, sincronización estática, auditoría de cero scroll horizontal en pantallas móviles (360px–430px), accesibilidad (a11y) y contrastes.
 - `05-revisar.md`: Auditoría de seguridad con `npm audit`, licencias de paquetes, exposición de secretos y salud de dependencias.
 - `06-aprobar.md`: Consolidación ejecutiva en tabla de dictamen (`Aprobado`, `Requiere Cambios` o `Bloqueado`) y reporte de handoff.
-- `07-centinela.md`: Soporte autónomo en GitHub Discussions cada 6 horas, soporte bilingüe, 3 niveles de notificación, escalamiento de seguridad y expediente histórico.
+- `07-centinela.md`: Soporte autónomo en GitHub Discussions cada 6 horas, soporte bilingüe (ES/EN), ventana de espera humana de 10 minutos con envío inmediato de borrador, notificaciones en paralelo (Discord DM y WhatsApp), cancelación por respuesta de @Luics415, prosa técnica densa (sin diagramas simplistas), escalamiento de incidentes y expediente histórico.
