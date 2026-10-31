@@ -1170,7 +1170,13 @@ def needs_response(discussion: Dict[str, Any], force: bool = False) -> Optional[
 
 def call_gemini_api(prompt: str, api_key: str) -> Optional[str]:
     """Invoca la API de Gemini utilizando modelos actualizados y encabezados oficiales con diagnóstico y reintentos ante saturación."""
-    models = ["gemini-3.8-flash", "gemini-2.5-flash", "gemini-2.0-flash"]
+    models = [
+        "gemini-3.8-flash",
+        "gemini-3.5-flash-lite",
+        "gemini-2.5-flash-lite",
+        "gemini-1.5-flash",
+        "gemini-1.5-pro"
+    ]
     endpoints = [
         "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent",
         "https://generativelanguage.googleapis.com/v1/models/{model}:generateContent"
@@ -1194,7 +1200,7 @@ def call_gemini_api(prompt: str, api_key: str) -> Optional[str]:
             for attempt in range(2):
                 req = urllib.request.Request(url, data=data, headers=headers)
                 try:
-                    with urllib.request.urlopen(req, timeout=20) as resp:
+                    with urllib.request.urlopen(req, timeout=65) as resp:
                         if resp.status == 200:
                             res_body = json.loads(resp.read().decode("utf-8"))
                             candidates = res_body.get("candidates", [])
@@ -1348,15 +1354,15 @@ This project was built to demonstrate how modern static web engineering (TanStac
 
 We welcome discussions on architecture, frontend performance, computer vision, and systems engineering. What topics or design decisions would you like to explore together?"""
 
-        # Default Q&A English
-        return f"""Hello @{author}! This portfolio operates as a fully static web application pre-rendered using **TanStack Start**, **React 19**, **Vite 8**, and **Tailwind CSS v4**, deployed continuously to GitHub Pages through automated GitHub Actions workflows.
+        # Dynamic Inquiry Synthesis in English
+        query_excerpt = query_text.strip().replace("\r", " ").replace("\n", " ")[:160]
+        return f"""Hello @{author}! Regarding your question on *"{discussion_title}"* in Luis Rivera's engineering portfolio:
 
-It showcases six flagship engineering projects spanning computer vision (Bio-Gesture Control Android), systems programming (Tlalne-Priority in C++20), WebGL voxel processing (QR Voxel Studio), offline PWAs (AussieCare), and desktop architectures (.NET 8 KASA Service Tracker), alongside Dev Visualizer and educational tools. Feel free to inspect [`README.md`](https://github.com/Luics415/Luics415.github.io/blob/main/README.md) and [`AGENTS.md`](https://github.com/Luics415/Luics415.github.io/blob/main/AGENTS.md)."""
+This portfolio is built on a modern static frontend architecture utilizing **TanStack Start**, **React 19**, **Vite 8**, and **Tailwind CSS v4**, delivered via GitHub Pages through automated GitHub Actions verification workflows. In relation to "{query_excerpt}...", our engineering design focuses on client-first isolation, zero-runtime overhead, and deterministic execution.
 
-        # Fallback English
-        return f"""Hello @{author}! Thank you for participating in Luis Rivera's portfolio discussions.
+The showcase highlights rigorous engineering solutions including Bio-Gesture Control (computer vision on Android with MediaPipe), QR Voxel Studio (in-memory WebGL 3D rendering), Tlalne-Priority (C++20 priority scheduling), and AussieCare (offline-first PWA), all managed under a multi-skill autonomous governance framework.
 
-This portfolio operates as a fully static web application pre-rendered using **TanStack Start**, **React 19**, **Vite 8**, and **Tailwind CSS v4**, deployed to GitHub Pages. For detailed technical documentation, please review [`README.md`](https://github.com/Luics415/Luics415.github.io/blob/main/README.md)."""
+For complete technical specifications and evidence, feel free to inspect [`README.md`](https://github.com/Luics415/Luics415.github.io/blob/main/README.md) and [`AGENTS.md`](https://github.com/Luics415/Luics415.github.io/blob/main/AGENTS.md). Let us know if you would like to explore any specific architectural layer further!"""
 
     # =========================================================================
     # ESPAÑOL
@@ -1470,10 +1476,15 @@ Este espacio está concebido para dialogar abiertamente sobre arquitectura de so
 
 Nos encanta intercambiar perspectivas sobre trade-offs técnicos, patrones de diseño y optimizaciones de rendimiento. ¿Qué temas o tecnologías te gustaría que analicemos en conjunto?"""
 
-    # Fallback por defecto en Español (Q&A)
-    return f"""¡Hola @{author}! Este portafolio opera como una aplicación estática prerenderizada mediante **TanStack Start**, **React 19**, **Vite 8** y **Tailwind CSS v4**, desplegada automáticamente hacia GitHub Pages a través de GitHub Actions.
+    # Fallback Dinámico Contextualizado en Español (Q&A y consultas abiertas)
+    query_excerpt = query_text.strip().replace("\r", " ").replace("\n", " ")[:160]
+    return f"""¡Hola @{author}! Respecto a tu consulta sobre *"{discussion_title}"* en el portafolio de Luis Rivera:
 
-Su propósito es concentrar proyectos de alto rigor técnico que abarcan visión computacional (Bio-Gesture Control Android), algoritmos en C++20 (Tlalne-Priority), WebGL 3D (QR Voxel Studio), PWAs offline-first (AussieCare) y desarrollo en .NET 8 (KASA Service Tracker), además del atlas interactivo Dev Visualizer. Puedes consultar más detalles en [`README.md`](https://github.com/Luics415/Luics415.github.io/blob/main/README.md) y [`AGENTS.md`](https://github.com/Luics415/Luics415.github.io/blob/main/AGENTS.md)."""
+Este sitio opera como una Single Page Application estática prerenderizada mediante **TanStack Start**, **React 19**, **Vite 8** y **Tailwind CSS v4**, desplegada hacia GitHub Pages bajo estrictas compuertas de calidad automatizadas en GitHub Actions (`04-verificar.md` y `05-revisar.md`). En relación con tu planteamiento sobre "{query_excerpt}...", la arquitectura técnica del portafolio y los proyectos concentrados abordan estos conceptos mediante desacoplamiento en cliente, computación síncrona en memoria y defensa en profundidad.
+
+El repositorio alberga proyectos de alto rigor como Bio-Gesture Control (visión artificial con Google MediaPipe en Android), QR Voxel Studio (renderizado WebGL 3D sin backend), Tlalne-Priority (algoritmos en C++20) y AussieCare (PWA offline-first), articulados bajo un ecosistema de gobernanza de software gobernado por agentes.
+
+Puedes profundizar en los fundamentos de diseño y la evidencia de cada desarrollo en [`README.md`](https://github.com/Luics415/Luics415.github.io/blob/main/README.md) y [`AGENTS.md`](https://github.com/Luics415/Luics415.github.io/blob/main/AGENTS.md). ¡Cualquier aspecto específico que desees debatir, estamos a tu disposición en este hilo!"""
 
 
 def generate_response(discussion: Dict[str, Any], target_comment: Dict[str, Any], context: Dict[str, Any], lang: str, escalation: Optional[str] = None, planning_issue: Optional[Dict[str, Any]] = None) -> str:
@@ -1748,35 +1759,44 @@ def main():
                 time.sleep(step)
                 time_left -= step
                 if time_left > 0:
-                    log(f"Ventana humana activa: {time_left/60.0:.1f} minutos restantes...")
+                    log(f"Ventana humana activa para #{disc_num}: {time_left/60.0:.1f} minutos restantes...")
 
-            # 8. Verificación de Intervención Humana durante la Ventana
-            log(f"Ventana de espera concluida. Verificando si @{args.owner} intervino manualmente...")
+        # 8. Verificación Obligatoria de Intervención Humana antes de Publicar
+        log(f"Verificando si @{args.owner} intervino manualmente en #{disc_num} antes de publicar...")
+        maintainer_replied = False
+        try:
+            disc_fresh = get_discussion_details(args.owner, args.repo, disc_num)
+            fresh_comments = disc_fresh.get("comments", {}).get("nodes", [])
+            maintainer_replied = any(
+                (c.get("author") or {}).get("login", "").lower() == args.owner.lower()
+                for c in fresh_comments
+            )
+        except Exception as e:
+            log(f"Aviso al verificar comentarios frescos para #{disc_num}: {e}")
+
+        if maintainer_replied:
+            log(f"Intervención manual de @{args.owner} detectada en #{disc_num}. Cancelando publicación automática de forma definitiva.")
             try:
-                disc_fresh = get_discussion_details(args.owner, args.repo, disc_num)
-                fresh_comments = disc_fresh.get("comments", {}).get("nodes", [])
-                maintainer_replied = any(
-                    (c.get("author") or {}).get("login", "").lower() == args.owner.lower()
-                    for c in fresh_comments
-                )
-                if maintainer_replied:
-                    log(f"Intervención manual de @{args.owner} detectada en #{disc_num}. Cancelando publicación automática.")
-                    send_discord_cancelled_notification(disc_num, title, author, url_disc)
-                    send_whatsapp_cancelled_notification(disc_num, title, author, url_disc)
-                    records_atendidos.append({
-                        "numero": disc_num,
-                        "titulo": title,
-                        "autor": author,
-                        "idioma": lang,
-                        "estado": "Cancelado (Intervención manual de @Luics415)",
-                        "escalado": escalation_cat,
-                        "url": url_disc,
-                        "fecha": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC"),
-                        "reply": full_response
-                    })
-                    continue
+                send_discord_cancelled_notification(disc_num, title, author, url_disc)
             except Exception as e:
-                log(f"Aviso al verificar intervención manual tras la espera: {e}")
+                log(f"Aviso al enviar notificación de cancelación a Discord: {e}")
+            try:
+                send_whatsapp_cancelled_notification(disc_num, title, author, url_disc)
+            except Exception as e:
+                log(f"Aviso al enviar notificación de cancelación a WhatsApp: {e}")
+            records_atendidos.append({
+                "numero": disc_num,
+                "titulo": title,
+                "autor": author,
+                "idioma": lang,
+                "estado": f"Cancelado (Intervención manual de @{args.owner})",
+                "escalado": escalation_cat,
+                "url": url_disc,
+                "fecha": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC"),
+                "reply": full_response
+            })
+            # GARANTÍA ABSOLUTA: JAMÁS ejecutar post_reply si el mantenedor ya intervino
+            continue
 
         # 9. Publicación en GitHub Discussions
         url_comentario = post_reply(
